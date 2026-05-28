@@ -1,0 +1,2647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Office Pool · FIFA World Cup 2026 Bracket Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,800;9..144,900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a1a14;
+    --paper: #f4efe6;
+    --paper-2: #ebe4d6;
+    --pitch: #14361f;
+    --pitch-deep: #0d2616;
+    --gold: #c9a14a;
+    --gold-bright: #e6c168;
+    --red: #a13526;
+    --line: rgba(10, 26, 20, 0.12);
+    --line-strong: rgba(10, 26, 20, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.5;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(201, 161, 74, 0.06) 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(20, 54, 31, 0.05) 0%, transparent 40%);
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    z-index: 1;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='3'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/></svg>");
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .masthead {
+    border-top: 6px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 24px 0 18px;
+    margin-bottom: 32px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px;
+  }
+  .masthead-edition {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(10, 26, 20, 0.65);
+  }
+  .masthead-edition.right { text-align: right; }
+  .masthead-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: clamp(28px, 5vw, 52px);
+    line-height: 0.95;
+    text-align: center;
+    letter-spacing: -0.02em;
+    font-variation-settings: "opsz" 144;
+  }
+  .masthead-title em {
+    font-style: italic;
+    color: var(--pitch);
+    font-weight: 400;
+  }
+
+  .subhead {
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: rgba(10, 26, 20, 0.7);
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+  .subhead-ornament {
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  .card {
+    background: rgba(255, 252, 245, 0.7);
+    border: 1px solid var(--line-strong);
+    padding: 32px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .card-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 26px;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px;
+  }
+  .card-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(10, 26, 20, 0.6);
+    margin-bottom: 24px;
+  }
+
+  label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(10, 26, 20, 0.7);
+    margin-bottom: 6px;
+  }
+  input[type="text"], input[type="email"], input[type="password"], input[type="number"], select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line-strong);
+    background: rgba(255, 255, 255, 0.6);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    border-radius: 0;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--pitch);
+    background: #fff;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+  @media (max-width: 640px) {
+    .form-row { grid-template-columns: 1fr; }
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 14px 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    text-align: center;
+  }
+  .btn:hover { background: var(--pitch); }
+  .btn:active { transform: translateY(1px); }
+  .btn:disabled { background: #999; cursor: not-allowed; }
+  .btn.secondary { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+  .btn.secondary:hover { background: var(--ink); color: var(--paper); }
+  .btn.gold { background: var(--gold); color: var(--ink); }
+  .btn.gold:hover { background: var(--gold-bright); }
+  .btn.danger { background: var(--red); }
+  .btn.danger:hover { background: #8a2c1f; }
+
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+
+  .footer-nav {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .footer-nav a {
+    color: rgba(10, 26, 20, 0.6);
+    cursor: pointer;
+    text-decoration: none;
+    border-bottom: 1px dotted transparent;
+  }
+  .footer-nav a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+
+  .groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .group-card {
+    background: rgba(255, 252, 245, 0.5);
+    border: 1px solid var(--line);
+    padding: 18px;
+  }
+  .group-header {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 22px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .group-header .label-mini {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(10, 26, 20, 0.5);
+    font-weight: 400;
+  }
+  .team-row {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 14px;
+  }
+  .team-row:last-child { border-bottom: none; }
+  .team-flag {
+    width: 22px;
+    height: 16px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    font-size: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    color: rgba(10, 26, 20, 0.55);
+  }
+  .team-name { font-weight: 500; }
+  .placement-picker { display: flex; gap: 4px; }
+  .placement-btn {
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--line-strong);
+    background: rgba(255, 255, 255, 0.5);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--ink);
+    transition: all 0.12s;
+    padding: 0;
+  }
+  .placement-btn:hover { border-color: var(--ink); }
+  .placement-btn.active-1 { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+  .placement-btn.active-2 { background: rgba(20, 54, 31, 0.85); border-color: var(--pitch); color: var(--paper); }
+  .placement-btn.active-3 { background: rgba(161, 53, 38, 0.85); border-color: var(--red); color: var(--paper); }
+
+  .knockout-section { margin-top: 40px; }
+  .round-header {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 22px;
+    margin: 32px 0 16px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .round-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .round-header .pts-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    background: rgba(201, 161, 74, 0.15);
+    padding: 3px 8px;
+    border-radius: 0;
+    font-weight: 700;
+  }
+
+  .matchup-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .matchup {
+    border: 1px solid var(--line);
+    background: rgba(255, 252, 245, 0.5);
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+  .matchup-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(10, 26, 20, 0.5);
+    margin-bottom: 6px;
+  }
+  .matchup-teams {
+    margin-bottom: 8px;
+    line-height: 1.45;
+  }
+  .matchup-teams strong { font-weight: 600; }
+  .matchup select {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.8);
+  }
+
+  .champion-card {
+    background: linear-gradient(135deg, var(--pitch) 0%, var(--pitch-deep) 100%);
+    color: var(--paper);
+    padding: 36px;
+    border: 1px solid var(--ink);
+    margin-top: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .champion-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(201, 161, 74, 0.15), transparent 60%);
+    pointer-events: none;
+  }
+  .champion-card .pts-tag {
+    background: var(--gold);
+    color: var(--ink);
+    display: inline-block;
+    padding: 4px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .champion-card h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 28px;
+    margin: 0 0 18px;
+    letter-spacing: -0.01em;
+  }
+  .champion-card select {
+    background: rgba(244, 239, 230, 0.95);
+    color: var(--ink);
+    font-size: 16px;
+    padding: 14px;
+    max-width: 340px;
+    margin: 0 auto;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  table.leaderboard {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+  }
+  table.leaderboard th, table.leaderboard td {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+  }
+  table.leaderboard th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(10, 26, 20, 0.6);
+    font-weight: 700;
+    background: rgba(20, 54, 31, 0.04);
+    border-bottom: 2px solid var(--ink);
+  }
+  table.leaderboard tr:hover td { background: rgba(201, 161, 74, 0.05); }
+  table.leaderboard .rank {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--ink);
+    width: 40px;
+  }
+  table.leaderboard .rank-1 { color: var(--gold); }
+  table.leaderboard .rank-2 { color: var(--pitch); }
+  table.leaderboard .rank-3 { color: var(--red); }
+  table.leaderboard .score {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 15px;
+    text-align: right;
+  }
+  table.leaderboard .status-paid { color: var(--pitch); font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; font-weight: 700; }
+  table.leaderboard .status-unpaid { color: var(--red); font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; font-weight: 700; }
+
+  .prizes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 24px 0;
+  }
+  @media (max-width: 700px) {
+    .prizes { grid-template-columns: repeat(2, 1fr); }
+  }
+  .prize {
+    background: rgba(255, 252, 245, 0.7);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--gold);
+    padding: 18px 16px;
+    text-align: center;
+  }
+  .prize.second { border-top-color: rgba(20, 54, 31, 0.7); }
+  .prize.third { border-top-color: var(--red); }
+  .prize.last { border-top-color: rgba(10, 26, 20, 0.5); }
+  .prize-place {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+  }
+  .prize-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(10, 26, 20, 0.6);
+    margin-top: 4px;
+  }
+  .prize-amount {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--pitch);
+    margin-top: 8px;
+  }
+
+  .scoring-legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin: 18px 0;
+  }
+  .scoring-item {
+    border: 1px solid var(--line);
+    padding: 10px 12px;
+    background: rgba(255, 252, 245, 0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .scoring-item .lbl { font-size: 12px; color: rgba(10, 26, 20, 0.75); }
+  .scoring-item .val {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--gold);
+    font-size: 14px;
+  }
+
+  .hidden { display: none !important; }
+
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0;
+    margin: 24px 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .stat-strip .stat {
+    padding: 18px;
+    border-right: 1px solid var(--line);
+    text-align: center;
+  }
+  .stat-strip .stat:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 32px;
+    line-height: 1;
+    color: var(--pitch);
+  }
+  .stat-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(10, 26, 20, 0.6);
+    margin-top: 6px;
+  }
+
+  .banner {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 20px;
+    margin-bottom: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .banner.warn { background: var(--red); }
+  .banner.gold { background: var(--gold); color: var(--ink); }
+  .banner-close {
+    background: transparent;
+    color: inherit;
+    border: 1px solid currentColor;
+    padding: 4px 10px;
+    font-family: inherit;
+    font-size: 10px;
+    cursor: pointer;
+  }
+
+  @keyframes shimmer {
+    0% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+    100% { opacity: 0.4; }
+  }
+  .loading {
+    text-align: center;
+    padding: 40px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(10, 26, 20, 0.5);
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  .review-section { margin-bottom: 20px; }
+  .review-section h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 18px;
+    margin: 0 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .review-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 14px;
+  }
+  .review-row .picked { font-weight: 600; }
+  .review-row .label {
+    color: rgba(10, 26, 20, 0.6);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 24px;
+    overflow-x: auto;
+  }
+  .tab-bar button {
+    background: transparent;
+    border: none;
+    padding: 12px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(10, 26, 20, 0.5);
+    cursor: pointer;
+    font-weight: 600;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+  }
+  .tab-bar button:hover { color: var(--ink); }
+  .tab-bar button.active {
+    color: var(--ink);
+    border-bottom-color: var(--gold);
+  }
+
+  .hero-pull {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(20px, 3vw, 28px);
+    line-height: 1.3;
+    font-weight: 400;
+    font-style: italic;
+    color: rgba(10, 26, 20, 0.8);
+    max-width: 700px;
+    margin: 0 auto 36px;
+    text-align: center;
+    border-left: 3px solid var(--gold);
+    border-right: 3px solid var(--gold);
+    padding: 0 24px;
+  }
+
+  .setup-banner {
+    background: rgba(161, 53, 38, 0.1);
+    border: 1px solid var(--red);
+    color: var(--red);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+  .setup-banner strong { font-weight: 700; }
+  .setup-banner code {
+    background: rgba(0,0,0,0.05);
+    padding: 1px 6px;
+    font-size: 12px;
+  }
+
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(10, 26, 20, 0.7);
+    z-index: 100;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 40px 24px;
+    overflow-y: auto;
+  }
+  .modal {
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    padding: 32px;
+    max-width: 720px;
+    width: 100%;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: transparent; border: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.15em;
+    color: rgba(10, 26, 20, 0.5);
+    cursor: pointer;
+    padding: 6px 10px;
+  }
+  .modal-close:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="masthead">
+    <div class="masthead-edition">No. 1 · Vol. XXIII</div>
+    <h1 class="masthead-title">The Office <em>Pool</em></h1>
+    <div class="masthead-edition right">FIFA WC 2026</div>
+  </header>
+
+  <div class="subhead">
+    <span class="subhead-ornament"></span>
+    <span>A bracket challenge across the United States, Mexico &amp; Canada</span>
+    <span class="subhead-ornament"></span>
+  </div>
+
+  <!-- Firebase not configured warning (only shows if commissioner hasn't set up yet) -->
+  <div id="firebaseSetupWarning" class="setup-banner hidden">
+    <strong>⚠ COMMISSIONER NOTICE:</strong> Firebase configuration is missing. Open this file in a text editor, find <code>FIREBASE_CONFIG</code> near the top of the script, and paste in your Firebase project settings. See instructions at the bottom of the HTML file.
+  </div>
+
+  <!-- ============================================== -->
+  <!-- VIEW: WELCOME -->
+  <!-- ============================================== -->
+  <div id="view-welcome" class="view">
+    <p class="hero-pull">"Forty-eight nations. One hundred and four matches. One bracket to crown the office champion."</p>
+
+    <div class="stat-strip">
+      <div class="stat"><div class="stat-num">48</div><div class="stat-lbl">Teams</div></div>
+      <div class="stat"><div class="stat-num">12</div><div class="stat-lbl">Groups</div></div>
+      <div class="stat"><div class="stat-num">104</div><div class="stat-lbl">Matches</div></div>
+      <div class="stat"><div class="stat-num">$10</div><div class="stat-lbl">Buy-in</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-subtitle">Step 01 · The Rules</div>
+      <h2 class="card-title">How It Works</h2>
+      <p>Pick the top three teams in each of the 12 groups, fill out the knockout bracket from the Round of 32 through to the Final, name your Golden Boot winner, and call your shot on the Final score. Submit by <strong>kickoff on June 11, 2026</strong>. Highest cumulative score takes home the pot.</p>
+
+      <h3 style="font-family:'Fraunces',serif; font-size:16px; margin-top:24px; margin-bottom:8px;">Scoring</h3>
+      <div class="scoring-legend">
+        <div class="scoring-item"><span class="lbl">Group winner (×12)</span><span class="val">1 pt</span></div>
+        <div class="scoring-item"><span class="lbl">Group runner-up (×12)</span><span class="val">1 pt</span></div>
+        <div class="scoring-item"><span class="lbl">3rd-place qualifier (×8 picks)</span><span class="val">1 pt</span></div>
+        <div class="scoring-item"><span class="lbl">Round of 32 (×16)</span><span class="val">2 pts</span></div>
+        <div class="scoring-item"><span class="lbl">Round of 16 (×8)</span><span class="val">4 pts</span></div>
+        <div class="scoring-item"><span class="lbl">Quarterfinal (×4)</span><span class="val">8 pts</span></div>
+        <div class="scoring-item"><span class="lbl">Semifinal (×2)</span><span class="val">16 pts</span></div>
+        <div class="scoring-item"><span class="lbl">Final / Champion</span><span class="val">32 pts</span></div>
+        <div class="scoring-item"><span class="lbl">Golden Boot</span><span class="val">5 pts</span></div>
+        <div class="scoring-item"><span class="lbl">Exact final score</span><span class="val">10 pts</span></div>
+        <div class="scoring-item"><span class="lbl">Correct final margin</span><span class="val">3 pts</span></div>
+      </div>
+      <p style="font-size:13px; color:rgba(10,26,20,0.65); margin-top:14px;"><em>Max possible: 236 points. The doubling-per-round structure rewards getting the late rounds right — but the group stage is where pools are won and lost.</em></p>
+    </div>
+
+    <div class="card">
+      <div class="card-subtitle">Step 02 · The Pot</div>
+      <h2 class="card-title">Prize Tiers</h2>
+      <p>Standard payout at 50 entrants ($500 pot). Scales with the number of buy-ins.</p>
+      <div class="prizes">
+        <div class="prize"><div class="prize-place">1st</div><div class="prize-label">Champion</div><div class="prize-amount">60%</div><div style="font-size:12px;color:rgba(10,26,20,0.55);margin-top:4px;">~$300</div></div>
+        <div class="prize second"><div class="prize-place">2nd</div><div class="prize-label">Runner-up</div><div class="prize-amount">25%</div><div style="font-size:12px;color:rgba(10,26,20,0.55);margin-top:4px;">~$125</div></div>
+        <div class="prize third"><div class="prize-place">3rd</div><div class="prize-label">Bronze</div><div class="prize-amount">10%</div><div style="font-size:12px;color:rgba(10,26,20,0.55);margin-top:4px;">~$50</div></div>
+        <div class="prize last"><div class="prize-place">Last</div><div class="prize-label">Wooden Spoon</div><div class="prize-amount">5%</div><div style="font-size:12px;color:rgba(10,26,20,0.55);margin-top:4px;">~$25</div></div>
+      </div>
+      <p style="font-size:12px; color:rgba(10,26,20,0.6); margin-top:8px;"><em>The Wooden Spoon goes to whichever entrant finishes dead last — gets back their $10 plus a bit of dignity.</em></p>
+      <div style="margin-top: 20px; padding: 14px 18px; background: rgba(20, 54, 31, 0.06); border-left: 3px solid var(--pitch); font-size: 13px; color: rgba(10,26,20,0.8);">
+        <strong style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--pitch);">Buy-in</strong><br>
+        Send <strong>$10 via Venmo</strong> to <strong style="color:var(--pitch);">@Sebastian-Felder</strong> after submitting your bracket. Brackets without payment by kickoff are dropped from the pool.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-subtitle">Step 03 · Enter</div>
+      <h2 class="card-title">Identify Yourself</h2>
+      <div class="form-row">
+        <div>
+          <label>Full Name</label>
+          <input type="text" id="welcome-name" placeholder="Sebastian R." />
+        </div>
+        <div>
+          <label>Email</label>
+          <input type="email" id="welcome-email" placeholder="you@idbbank.com" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn gold" id="startBtn" onclick="startBracket()">Begin My Bracket →</button>
+        <button class="btn secondary" onclick="showView('view-leaderboard'); loadLeaderboard();">View Leaderboard</button>
+        <button class="btn secondary" onclick="showView('view-mybracket'); resetMyBracketLookup();">View My Bracket</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- VIEW: BRACKET FILL -->
+  <!-- ============================================== -->
+  <div id="view-bracket" class="view hidden">
+
+    <div class="banner gold" id="poolLockedBanner" style="display:none;">
+      <span>⚠ ENTRIES ARE LOCKED · The tournament has begun</span>
+      <button class="banner-close" onclick="document.getElementById('poolLockedBanner').style.display='none'">DISMISS</button>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="groups">Group Stage</button>
+      <button class="tab-btn" data-tab="thirds">3rd-Place Qualifiers</button>
+      <button class="tab-btn" data-tab="r32">Round of 32</button>
+      <button class="tab-btn" data-tab="r16">Round of 16</button>
+      <button class="tab-btn" data-tab="qf">Quarterfinals</button>
+      <button class="tab-btn" data-tab="sf">Semifinals</button>
+      <button class="tab-btn" data-tab="final">Final</button>
+    </div>
+
+    <div class="tab-pane" id="tab-groups">
+      <div class="card">
+        <div class="card-subtitle">Step 01 · The Group Stage</div>
+        <h2 class="card-title">Pick 1st, 2nd &amp; 3rd in Each Group</h2>
+        <p style="font-size:14px; color:rgba(10,26,20,0.7);">Tap the <strong>1</strong>, <strong>2</strong>, or <strong>3</strong> button next to a team to mark it as the group winner, runner-up, or third-place finisher. Tap again to clear. On the next screen, you'll pick which 8 of your 12 third-place teams actually qualify for the Round of 32.</p>
+      </div>
+      <div class="groups-grid" id="groupsGrid"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="switchTab('thirds')">Continue to 3rd-Place Qualifiers →</button>
+      </div>
+    </div>
+
+    <div class="tab-pane hidden" id="tab-thirds">
+      <div class="card">
+        <div class="card-subtitle">Step 02 · Third-Place Qualifiers</div>
+        <h2 class="card-title">Pick the 8 Best 3rd-Place Finishers</h2>
+        <p style="font-size:14px; color:rgba(10,26,20,0.7);">In the 48-team format, the eight third-place teams with the best records across all 12 groups advance to the Round of 32. From the third-place teams you picked in each group, select the <strong>8 that you think will advance</strong>. The remaining 4 will be eliminated.</p>
+        <p style="font-size:13px; color:rgba(10,26,20,0.6); margin-top:8px;"><em>You earn 1 point per correctly predicted 3rd-place qualifier. Each R32 matchup involving a "best 3rd" slot will automatically pull from the appropriate group based on FIFA's official bracket structure.</em></p>
+      </div>
+      <div id="thirdsPanel"></div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="switchTab('groups')">← Back to Groups</button>
+        <button class="btn" onclick="switchTab('r32')">Continue to Round of 32 →</button>
+      </div>
+    </div>
+
+    <div class="tab-pane hidden" id="tab-r32">
+      <div class="card">
+        <div class="card-subtitle">Round of 32</div>
+        <h2 class="card-title">June 28 – July 3, 2026</h2>
+        <p style="font-size:14px; color:rgba(10,26,20,0.7);">Pick the winner of each Round of 32 match. The team names are filled in based on your group stage picks above — change those and these update automatically.</p>
+      </div>
+      <div class="round-header">Round of 32 <span class="pts-tag">2 pts each</span></div>
+      <div class="matchup-grid" id="r32Grid"></div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="switchTab('thirds')">← Back to 3rd-Place</button>
+        <button class="btn" onclick="switchTab('r16')">Continue to Round of 16 →</button>
+      </div>
+    </div>
+
+    <div class="tab-pane hidden" id="tab-r16">
+      <div class="round-header">Round of 16 <span class="pts-tag">4 pts each</span></div>
+      <div class="matchup-grid" id="r16Grid"></div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="switchTab('r32')">← Back</button>
+        <button class="btn" onclick="switchTab('qf')">Continue to Quarterfinals →</button>
+      </div>
+    </div>
+
+    <div class="tab-pane hidden" id="tab-qf">
+      <div class="round-header">Quarterfinals <span class="pts-tag">8 pts each</span></div>
+      <div class="matchup-grid" id="qfGrid"></div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="switchTab('r16')">← Back</button>
+        <button class="btn" onclick="switchTab('sf')">Continue to Semifinals →</button>
+      </div>
+    </div>
+
+    <div class="tab-pane hidden" id="tab-sf">
+      <div class="round-header">Semifinals <span class="pts-tag">16 pts each</span></div>
+      <div class="matchup-grid" id="sfGrid"></div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="switchTab('qf')">← Back</button>
+        <button class="btn" onclick="switchTab('final')">Continue to Final →</button>
+      </div>
+    </div>
+
+    <div class="tab-pane hidden" id="tab-final">
+      <div class="round-header">The Final &amp; Tiebreakers <span class="pts-tag">32 + 5 + 10/3 pts</span></div>
+      <div class="matchup-grid" id="finalGrid"></div>
+      <div class="champion-card">
+        <div class="pts-tag">32 pts · World Champion</div>
+        <h2>Who lifts the trophy at MetLife on July 19?</h2>
+        <select id="championPick">
+          <option value="">-- Select your champion --</option>
+        </select>
+      </div>
+
+      <div class="card" style="margin-top:24px;">
+        <div class="card-subtitle">Tiebreakers</div>
+        <h2 class="card-title">Two final calls</h2>
+        <div class="form-row">
+          <div>
+            <label>Golden Boot Winner (5 pts)</label>
+            <input type="text" id="goldenBoot" placeholder="e.g. Kylian Mbappé" />
+          </div>
+          <div>
+            <label>Final Score (champion / runner-up)</label>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input type="number" id="finalScoreA" placeholder="2" min="0" max="20" style="width:60px;" />
+              <span style="font-family:'JetBrains Mono',monospace;">–</span>
+              <input type="number" id="finalScoreB" placeholder="1" min="0" max="20" style="width:60px;" />
+            </div>
+          </div>
+        </div>
+        <p style="font-size:12px; color:rgba(10,26,20,0.6);"><em>10 pts for exact score. 3 pts for correct margin of victory. Penalty shootouts count as a draw + the winner.</em></p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn secondary" onclick="switchTab('sf')">← Back</button>
+        <button class="btn gold" onclick="reviewBracket()">Review &amp; Submit →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- VIEW: REVIEW -->
+  <!-- ============================================== -->
+  <div id="view-review" class="view hidden">
+    <div class="card">
+      <div class="card-subtitle">Final Step · Confirm</div>
+      <h2 class="card-title">Review Your Bracket</h2>
+      <p style="font-size:14px; color:rgba(10,26,20,0.7);">One last look before locking it in. Once submitted you cannot edit, so check carefully.</p>
+      <div id="reviewContent"></div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="showView('view-bracket')">← Edit Picks</button>
+        <button class="btn gold" id="submitBtn" onclick="submitBracket()">Submit Bracket &amp; Lock In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- VIEW: CONFIRMATION -->
+  <!-- ============================================== -->
+  <div id="view-confirm" class="view hidden">
+    <div class="card" style="text-align:center; padding:60px 32px;">
+      <div style="font-family:'Fraunces',serif; font-size:80px; color:var(--gold); line-height:1;">✓</div>
+      <h2 class="card-title" style="font-size:32px; margin-top:16px;">You're In.</h2>
+      <p style="font-size:16px; max-width:500px; margin:0 auto 20px; color:rgba(10,26,20,0.75);">Your bracket has been locked in and added to the pool. To complete your entry, send your <strong>$10 buy-in</strong> via Venmo to <strong style="color:var(--pitch);">@Sebastian-Felder</strong> before kickoff.</p>
+      <div style="background: rgba(20, 54, 31, 0.06); border: 1px solid var(--line); padding: 18px 24px; max-width: 360px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+        <div style="text-align:left;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(10,26,20,0.55);">Venmo</div>
+          <div style="font-family:'Fraunces',serif;font-weight:700;font-size:20px;color:var(--pitch);">@Sebastian-Felder</div>
+        </div>
+        <div style="font-family:'Fraunces',serif;font-weight:800;font-size:28px;color:var(--gold);">$10</div>
+      </div>
+      <p id="confirmPlayerName" style="font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(10,26,20,0.6);"></p>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn" onclick="resetForm(); showView('view-welcome');">Done</button>
+        <button class="btn secondary" onclick="showView('view-leaderboard'); loadLeaderboard();">View Leaderboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- VIEW: LEADERBOARD -->
+  <!-- ============================================== -->
+  <div id="view-leaderboard" class="view hidden">
+    <div class="card">
+      <div class="card-subtitle">Live Standings</div>
+      <h2 class="card-title">The Leaderboard</h2>
+      <p style="font-size:14px; color:rgba(10,26,20,0.7);">Updated as results are entered by the commissioner. Submitted brackets are listed here.</p>
+      <div id="leaderboardContent"></div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="showView('view-welcome')">← Back to Home</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- VIEW: MY BRACKET (participant self-lookup) -->
+  <!-- ============================================== -->
+  <div id="view-mybracket" class="view hidden">
+    <div class="card" id="myBracketLookupCard">
+      <div class="card-subtitle">Look up your bracket</div>
+      <h2 class="card-title">View My Submitted Bracket</h2>
+      <p style="font-size:14px; color:rgba(10,26,20,0.7);">Enter the email address you used when submitting your bracket. We'll show you everything you picked, read-only — picks cannot be edited after submission.</p>
+      <div class="form-row">
+        <div>
+          <label>Email</label>
+          <input type="email" id="myBracketEmail" placeholder="you@idbbank.com" onkeypress="if(event.key==='Enter') lookupMyBracket()" />
+        </div>
+        <div></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" id="lookupBtn" onclick="lookupMyBracket()">Look Up Bracket</button>
+        <button class="btn secondary" onclick="showView('view-welcome')">← Back</button>
+      </div>
+      <p id="myBracketLookupError" style="color:var(--red); font-size:13px; margin-top:14px; display:none;"></p>
+    </div>
+    <div id="myBracketResult" class="hidden"></div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- VIEW: ADMIN -->
+  <!-- ============================================== -->
+  <div id="view-admin" class="view hidden">
+    <div class="card" id="adminAuthCard">
+      <div class="card-subtitle">Restricted Area</div>
+      <h2 class="card-title">Commissioner Sign-In</h2>
+      <p style="font-size:14px; color:rgba(10,26,20,0.7);">Enter the admin passcode to manage the pool.</p>
+      <div class="form-row">
+        <div>
+          <label>Passcode</label>
+          <input type="password" id="adminPass" placeholder="••••••••" onkeypress="if(event.key==='Enter') adminLogin()" />
+        </div>
+        <div></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="adminLogin()">Sign In</button>
+        <button class="btn secondary" onclick="showView('view-welcome')">Cancel</button>
+      </div>
+    </div>
+
+    <div id="adminPanel" class="hidden">
+      <div class="banner" id="poolStatusBanner">
+        <span id="poolStatusText">Pool status: OPEN · accepting entries</span>
+        <button class="banner-close" onclick="togglePoolLock()" id="lockToggleBtn">LOCK POOL</button>
+      </div>
+
+      <div class="tab-bar">
+        <button class="tab-btn admin-tab-btn active" data-admintab="participants">Participants</button>
+        <button class="tab-btn admin-tab-btn" data-admintab="results">Enter Results</button>
+        <button class="tab-btn admin-tab-btn" data-admintab="standings">Standings</button>
+        <button class="tab-btn admin-tab-btn" data-admintab="settings">Settings</button>
+      </div>
+
+      <div class="tab-pane" id="admintab-participants">
+        <div class="card">
+          <div class="card-subtitle">Roster</div>
+          <h2 class="card-title">Participants &amp; Payments</h2>
+          <p style="font-size:14px; color:rgba(10,26,20,0.7);">Toggle the payment status as you collect $10 from each player.</p>
+          <div id="adminParticipantsTable"></div>
+        </div>
+      </div>
+
+      <div class="tab-pane hidden" id="admintab-results">
+        <div class="card">
+          <div class="card-subtitle">Official Results</div>
+          <h2 class="card-title">Enter Actual Tournament Outcomes</h2>
+          <p style="font-size:14px; color:rgba(10,26,20,0.7);">Fill these in as the tournament progresses. Click <strong>Save Results</strong> at the bottom to recalculate the leaderboard.</p>
+          <div id="adminResultsForm"></div>
+          <div class="btn-row">
+            <button class="btn gold" onclick="saveResults()">Save Results</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane hidden" id="admintab-standings">
+        <div class="card">
+          <div class="card-subtitle">Full Standings</div>
+          <h2 class="card-title">Live Leaderboard</h2>
+          <div id="adminStandingsTable"></div>
+        </div>
+      </div>
+
+      <div class="tab-pane hidden" id="admintab-settings">
+        <div class="card">
+          <div class="card-subtitle">Configuration</div>
+          <h2 class="card-title">Pool Settings</h2>
+          <div class="form-row">
+            <div>
+              <label>Buy-in (USD)</label>
+              <input type="number" id="setBuyIn" value="10" />
+            </div>
+            <div>
+              <label>1st place %</label>
+              <input type="number" id="setPrize1" value="60" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div>
+              <label>2nd place %</label>
+              <input type="number" id="setPrize2" value="25" />
+            </div>
+            <div>
+              <label>3rd place %</label>
+              <input type="number" id="setPrize3" value="10" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div>
+              <label>Wooden Spoon (last) %</label>
+              <input type="number" id="setPrizeLast" value="5" />
+            </div>
+            <div></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn" onclick="saveSettings()">Save Settings</button>
+            <button class="btn danger" onclick="confirmReset()">Reset Entire Pool</button>
+          </div>
+          <p style="font-size:12px; color:rgba(10,26,20,0.55); margin-top:16px;"><em>Reset wipes ALL participant entries and results in Firestore. Use with care.</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bracket viewer modal (used by commissioner panel) -->
+  <div id="bracketModal" class="modal-backdrop hidden" onclick="if(event.target===this) closeBracketModal()">
+    <div class="modal">
+      <button class="modal-close" onclick="closeBracketModal()">CLOSE ✕</button>
+      <div id="bracketModalContent"></div>
+    </div>
+  </div>
+
+  <nav class="footer-nav">
+    <a onclick="showView('view-welcome')">Home</a>
+    <a onclick="showView('view-mybracket'); resetMyBracketLookup();">My Bracket</a>
+    <a onclick="showView('view-leaderboard'); loadLeaderboard();">Leaderboard</a>
+    <a onclick="showView('view-admin'); checkAdminState();">Commissioner</a>
+  </nav>
+
+</div>
+
+<!-- ==========================================================
+   FIREBASE SDK (modular v10) loaded via CDN ESM imports
+   ========================================================== -->
+<script type="module">
+  // ============================================================
+  // ===  EDIT THESE TWO CONSTANTS BEFORE DEPLOYING  ============
+  // ============================================================
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyD2U8uWSdr0JwqD61iQ4BhtH-VRbpZ9I14",
+    authDomain: "world-cup-2026-office-pool.firebaseapp.com",
+    projectId: "world-cup-2026-office-pool",
+    storageBucket: "world-cup-2026-office-pool.firebasestorage.app",
+    messagingSenderId: "150818919037",
+    appId: "1:150818919037:web:3f90e5cc0dadd0f4d6d714"
+  };
+
+  // Set your admin password here. Anyone with this string can manage the pool.
+  // Pick something not easily guessed (don't use "admin" or "password").
+  const ADMIN_PASSCODE = "IDBWC2026";
+
+  // ============================================================
+  // ===  END OF CONFIG  ========================================
+  // ============================================================
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getFirestore, collection, doc, setDoc, getDoc, getDocs,
+    deleteDoc, query, where, writeBatch
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // Check if config is filled in
+  const configIsValid = FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.startsWith("PASTE_");
+
+  let db = null;
+  if (configIsValid) {
+    try {
+      const app = initializeApp(FIREBASE_CONFIG);
+      db = getFirestore(app);
+    } catch (err) {
+      console.error("Firebase init failed:", err);
+    }
+  } else {
+    document.getElementById('firebaseSetupWarning').classList.remove('hidden');
+  }
+
+  // Expose to global window so non-module code can call them
+  window.FB = {
+    db,
+    configIsValid,
+    ADMIN_PASSCODE,
+    collection, doc, setDoc, getDoc, getDocs, deleteDoc, query, where, writeBatch
+  };
+
+  // Trigger init now that Firebase is ready
+  window.dispatchEvent(new Event('firebase-ready'));
+</script>
+
+<!-- ==========================================================
+     MAIN APP LOGIC
+     ========================================================== -->
+<script>
+/* ==========================================================
+   2026 FIFA WORLD CUP DATA
+   ========================================================== */
+const GROUPS = {
+  A: { teams: ['Mexico', 'South Africa', 'Korea Republic', 'Czechia'] },
+  B: { teams: ['Canada', 'Bosnia and Herzegovina', 'Qatar', 'Switzerland'] },
+  C: { teams: ['Brazil', 'Morocco', 'Haiti', 'Scotland'] },
+  D: { teams: ['United States', 'Paraguay', 'Australia', 'Türkiye'] },
+  E: { teams: ['Germany', 'Curaçao', 'Ivory Coast', 'Ecuador'] },
+  F: { teams: ['Netherlands', 'Japan', 'Sweden', 'Tunisia'] },
+  G: { teams: ['Belgium', 'Egypt', 'Iran', 'New Zealand'] },
+  H: { teams: ['Spain', 'Cape Verde', 'Saudi Arabia', 'Uruguay'] },
+  I: { teams: ['France', 'Senegal', 'Iraq', 'Norway'] },
+  J: { teams: ['Argentina', 'Algeria', 'Austria', 'Jordan'] },
+  K: { teams: ['Portugal', 'DR Congo', 'Uzbekistan', 'Colombia'] },
+  L: { teams: ['England', 'Croatia', 'Ghana', 'Panama'] }
+};
+
+const GROUP_LETTERS = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+const ALL_TEAMS = GROUP_LETTERS.flatMap(g => GROUPS[g].teams).sort();
+
+const R32_MATCHES = [
+  { id: 'R32-1',  label: 'Group A 2nd vs Group B 2nd',                                        team1: { type: 'runner', group: 'A' }, team2: { type: 'runner', group: 'B' } },
+  { id: 'R32-2',  label: 'Group C 1st vs Group F 2nd',                                        team1: { type: 'winner', group: 'C' }, team2: { type: 'runner', group: 'F' } },
+  { id: 'R32-3',  label: 'Group E 1st vs Best 3rd (from A/B/C/D/F)',                          team1: { type: 'winner', group: 'E' }, team2: { type: 'third',  pool: ['A','B','C','D','F'] } },
+  { id: 'R32-4',  label: 'Group F 1st vs Group C 2nd',                                        team1: { type: 'winner', group: 'F' }, team2: { type: 'runner', group: 'C' } },
+  { id: 'R32-5',  label: 'Group E 2nd vs Group I 2nd',                                        team1: { type: 'runner', group: 'E' }, team2: { type: 'runner', group: 'I' } },
+  { id: 'R32-6',  label: 'Group I 1st vs Best 3rd (from C/D/F/G/H)',                          team1: { type: 'winner', group: 'I' }, team2: { type: 'third',  pool: ['C','D','F','G','H'] } },
+  { id: 'R32-7',  label: 'Group A 1st vs Best 3rd (from C/E/F/H/I)',                          team1: { type: 'winner', group: 'A' }, team2: { type: 'third',  pool: ['C','E','F','H','I'] } },
+  { id: 'R32-8',  label: 'Group L 1st vs Best 3rd (from E/H/I/J/K)',                          team1: { type: 'winner', group: 'L' }, team2: { type: 'third',  pool: ['E','H','I','J','K'] } },
+  { id: 'R32-9',  label: 'Group G 1st vs Best 3rd (from A/E/H/I/J)',                          team1: { type: 'winner', group: 'G' }, team2: { type: 'third',  pool: ['A','E','H','I','J'] } },
+  { id: 'R32-10', label: 'Group D 1st vs Best 3rd (from B/E/F/I/J)',                          team1: { type: 'winner', group: 'D' }, team2: { type: 'third',  pool: ['B','E','F','I','J'] } },
+  { id: 'R32-11', label: 'Group H 1st vs Group J 2nd',                                        team1: { type: 'winner', group: 'H' }, team2: { type: 'runner', group: 'J' } },
+  { id: 'R32-12', label: 'Group K 2nd vs Group L 2nd',                                        team1: { type: 'runner', group: 'K' }, team2: { type: 'runner', group: 'L' } },
+  { id: 'R32-13', label: 'Group B 1st vs Best 3rd (from E/F/G/I/J)',                          team1: { type: 'winner', group: 'B' }, team2: { type: 'third',  pool: ['E','F','G','I','J'] } },
+  { id: 'R32-14', label: 'Group D 2nd vs Group G 2nd',                                        team1: { type: 'runner', group: 'D' }, team2: { type: 'runner', group: 'G' } },
+  { id: 'R32-15', label: 'Group J 1st vs Group H 2nd',                                        team1: { type: 'winner', group: 'J' }, team2: { type: 'runner', group: 'H' } },
+  { id: 'R32-16', label: 'Group K 1st vs Best 3rd (from D/E/I/J/L)',                          team1: { type: 'winner', group: 'K' }, team2: { type: 'third',  pool: ['D','E','I','J','L'] } }
+];
+
+const R16_PAIRINGS = [['R32-1','R32-2'],['R32-3','R32-4'],['R32-5','R32-6'],['R32-7','R32-8'],['R32-9','R32-10'],['R32-11','R32-12'],['R32-13','R32-14'],['R32-15','R32-16']];
+const QF_PAIRINGS = [['R16-1','R16-2'],['R16-3','R16-4'],['R16-5','R16-6'],['R16-7','R16-8']];
+const SF_PAIRINGS = [['QF-1','QF-2'],['QF-3','QF-4']];
+
+/* ==========================================================
+   STATE
+   ========================================================== */
+let currentBracket = makeEmptyBracket();
+let isAdmin = false;
+let poolMeta = null;
+let officialResults = {};
+let cachedParticipants = null;
+
+function makeEmptyBracket() {
+  return {
+    name: '', email: '',
+    groups: {},
+    thirdQualifiers: [],  // array of group letters (max 8) whose 3rd-place team advances
+    r32: {}, r16: {}, qf: {}, sf: {},
+    finalMatch: '', champion: '',
+    goldenBoot: '', finalScoreA: null, finalScoreB: null
+  };
+}
+
+function resetForm() {
+  currentBracket = makeEmptyBracket();
+  document.getElementById('welcome-name').value = '';
+  document.getElementById('welcome-email').value = '';
+}
+
+/* ==========================================================
+   FIREBASE HELPERS — wait for ready, then expose simple calls
+   ========================================================== */
+function fbReady() {
+  return window.FB && window.FB.configIsValid && window.FB.db;
+}
+
+async function fbGetDoc(path) {
+  const [collName, docId] = path.split('/');
+  const ref = window.FB.doc(window.FB.db, collName, docId);
+  const snap = await window.FB.getDoc(ref);
+  return snap.exists() ? snap.data() : null;
+}
+
+async function fbSetDoc(path, data) {
+  const [collName, docId] = path.split('/');
+  const ref = window.FB.doc(window.FB.db, collName, docId);
+  await window.FB.setDoc(ref, data);
+}
+
+async function fbDeleteDoc(path) {
+  const [collName, docId] = path.split('/');
+  const ref = window.FB.doc(window.FB.db, collName, docId);
+  await window.FB.deleteDoc(ref);
+}
+
+async function fbGetAllParticipants() {
+  if (!fbReady()) return [];
+  const collRef = window.FB.collection(window.FB.db, 'participants');
+  const snap = await window.FB.getDocs(collRef);
+  const list = [];
+  snap.forEach(d => list.push({ id: d.id, ...d.data() }));
+  return list;
+}
+
+async function fbCheckEmailExists(email) {
+  if (!fbReady()) return false;
+  const collRef = window.FB.collection(window.FB.db, 'participants');
+  const q = window.FB.query(collRef, window.FB.where('emailLower', '==', email.toLowerCase().trim()));
+  const snap = await window.FB.getDocs(q);
+  return !snap.empty;
+}
+
+/* ==========================================================
+   VIEW / TAB SWITCHING
+   ========================================================== */
+function showView(viewId) {
+  document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+  document.getElementById(viewId).classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-pane').forEach(t => t.classList.add('hidden'));
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    if (b.classList.contains('admin-tab-btn')) return;
+    b.classList.remove('active');
+  });
+  document.getElementById('tab-' + tabId).classList.remove('hidden');
+  document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (tabId === 'thirds') renderThirds();
+  if (tabId === 'r32') renderR32();
+  if (tabId === 'r16') renderR16();
+  if (tabId === 'qf') renderQF();
+  if (tabId === 'sf') renderSF();
+  if (tabId === 'final') renderFinal();
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  if (btn.classList.contains('admin-tab-btn')) return;
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+/* ==========================================================
+   START BRACKET
+   ========================================================== */
+async function startBracket() {
+  const name = document.getElementById('welcome-name').value.trim();
+  const email = document.getElementById('welcome-email').value.trim();
+  if (!name || !email) { alert('Please enter both your name and email to begin.'); return; }
+  if (!email.includes('@') || !email.includes('.')) { alert('Please enter a valid email address.'); return; }
+
+  if (!fbReady()) {
+    alert('The pool is not yet configured. Please contact the commissioner.');
+    return;
+  }
+
+  const btn = document.getElementById('startBtn');
+  btn.disabled = true;
+  btn.textContent = 'Checking...';
+
+  try {
+    await loadPoolMeta();
+    if (poolMeta && poolMeta.locked) {
+      alert('Entries are locked — the tournament has begun and no new brackets can be submitted.');
+      btn.disabled = false;
+      btn.textContent = 'Begin My Bracket →';
+      return;
+    }
+
+    const emailExists = await fbCheckEmailExists(email);
+    if (emailExists) {
+      alert(`A bracket has already been submitted from ${email}. Only one bracket per person is allowed. Contact the commissioner if this is an error.`);
+      btn.disabled = false;
+      btn.textContent = 'Begin My Bracket →';
+      return;
+    }
+
+    currentBracket = makeEmptyBracket();
+    currentBracket.name = name;
+    currentBracket.email = email;
+
+    showView('view-bracket');
+    renderGroups();
+    renderR32();
+    populateChampionDropdown();
+  } catch (err) {
+    console.error(err);
+    alert('Could not connect to the pool. Check your internet connection or contact the commissioner.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Begin My Bracket →';
+  }
+}
+
+/* ==========================================================
+   GROUPS RENDERING
+   ========================================================== */
+function renderGroups() {
+  const grid = document.getElementById('groupsGrid');
+  grid.innerHTML = '';
+  GROUP_LETTERS.forEach(letter => {
+    const group = GROUPS[letter];
+    const card = document.createElement('div');
+    card.className = 'group-card';
+    card.innerHTML = `
+      <div class="group-header">
+        <span>Group ${letter}</span>
+        <span class="label-mini">Pick 1 / 2 / 3</span>
+      </div>
+      ${group.teams.map(team => `
+        <div class="team-row">
+          <div class="team-flag">${getFlagCode(team)}</div>
+          <div class="team-name">${team}</div>
+          <div class="placement-picker" data-group="${letter}" data-team="${escapeAttr(team)}">
+            <button class="placement-btn" data-place="1" onclick="placeTeam('${letter}', '${escapeAttr(team)}', 1)">1</button>
+            <button class="placement-btn" data-place="2" onclick="placeTeam('${letter}', '${escapeAttr(team)}', 2)">2</button>
+            <button class="placement-btn" data-place="3" onclick="placeTeam('${letter}', '${escapeAttr(team)}', 3)">3</button>
+          </div>
+        </div>
+      `).join('')}
+    `;
+    grid.appendChild(card);
+  });
+  refreshPlacementButtons();
+}
+
+function placeTeam(groupLetter, team, place) {
+  if (!currentBracket.groups[groupLetter]) currentBracket.groups[groupLetter] = {};
+  const g = currentBracket.groups[groupLetter];
+  if (g[place] === team) {
+    delete g[place];
+  } else {
+    Object.keys(g).forEach(p => { if (g[p] === team) delete g[p]; });
+    delete g[place];
+    g[place] = team;
+  }
+  refreshPlacementButtons();
+}
+
+function refreshPlacementButtons() {
+  document.querySelectorAll('.placement-picker').forEach(picker => {
+    const groupLetter = picker.dataset.group;
+    const team = picker.dataset.team;
+    const placements = currentBracket.groups[groupLetter] || {};
+    picker.querySelectorAll('.placement-btn').forEach(btn => {
+      const place = parseInt(btn.dataset.place);
+      btn.className = 'placement-btn';
+      if (placements[place] === team) btn.classList.add('active-' + place);
+    });
+  });
+}
+
+/* ==========================================================
+   THIRD-PLACE QUALIFIERS RENDERING
+   ========================================================== */
+function renderThirds() {
+  const panel = document.getElementById('thirdsPanel');
+  if (!panel) return;
+
+  // Build a card listing each group, with its current 3rd-place pick and a
+  // checkbox to mark it as advancing. Disable additional checks once 8 are
+  // selected.
+  const qualifiers = currentBracket.thirdQualifiers || [];
+  const count = qualifiers.length;
+
+  let html = `
+    <div class="card" style="display:flex;justify-content:space-between;align-items:center;padding:18px 24px;">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;color:rgba(10,26,20,0.6);">SELECTED</div>
+        <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:800;line-height:1;"><span id="thirdsCount">${count}</span> <span style="color:rgba(10,26,20,0.4);font-size:20px;">/ 8</span></div>
+      </div>
+      <div style="font-size:13px;color:rgba(10,26,20,0.65);max-width:380px;text-align:right;">
+        ${count < 8 ? `Choose <strong>${8 - count} more</strong> team${8 - count !== 1 ? 's' : ''} you think will advance as a 3rd-place qualifier.` : `You've selected your 8 qualifiers. Uncheck to swap a pick.`}
+      </div>
+    </div>
+    <div class="groups-grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr));">
+  `;
+
+  GROUP_LETTERS.forEach(letter => {
+    const thirdTeam = currentBracket.groups[letter]?.[3];
+    const isChecked = qualifiers.includes(letter);
+    const isDisabled = !isChecked && count >= 8;
+    const hasNoThird = !thirdTeam;
+
+    html += `
+      <label class="group-card" style="cursor:${hasNoThird ? 'not-allowed' : 'pointer'};opacity:${hasNoThird ? '0.45' : '1'};display:block;margin:0;">
+        <div class="group-header" style="font-size:18px;margin-bottom:10px;">
+          <span>Group ${letter}</span>
+          <span class="label-mini">3rd place</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <input type="checkbox"
+                 ${isChecked ? 'checked' : ''}
+                 ${isDisabled || hasNoThird ? 'disabled' : ''}
+                 onchange="toggleThirdQualifier('${letter}', this.checked)"
+                 style="width:20px;height:20px;cursor:${hasNoThird ? 'not-allowed' : 'pointer'};accent-color:var(--gold);" />
+          <div style="flex:1;">
+            <div style="font-weight:600;font-size:15px;">${thirdTeam ? escapeHtml(thirdTeam) : '(pick a 3rd in this group first)'}</div>
+            ${thirdTeam ? `<div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(10,26,20,0.5);margin-top:2px;letter-spacing:0.08em;">${getFlagCode(thirdTeam)}</div>` : ''}
+          </div>
+        </div>
+      </label>
+    `;
+  });
+
+  html += '</div>';
+  panel.innerHTML = html;
+}
+
+function toggleThirdQualifier(letter, checked) {
+  const q = currentBracket.thirdQualifiers || [];
+  if (checked) {
+    if (!q.includes(letter) && q.length < 8) q.push(letter);
+  } else {
+    const idx = q.indexOf(letter);
+    if (idx >= 0) q.splice(idx, 1);
+    // Clear any downstream R32 picks that used this group's 3rd
+    Object.keys(currentBracket.r32).forEach(matchId => {
+      const m = R32_MATCHES.find(x => x.id === matchId);
+      if (!m) return;
+      if (m.team2.type === 'third' && m.team2.pool.includes(letter)) {
+        // Could have been the assigned team — recompute and check
+        const assignment = assignThirdPlaceSlots(q);
+        const assignedGroup = assignment[matchId];
+        const validTeams = [];
+        const t1 = getTeamForSource(m.team1);
+        if (t1 && !t1.startsWith('(')) validTeams.push(t1);
+        if (assignedGroup) {
+          const t = currentBracket.groups[assignedGroup]?.[3];
+          if (t) validTeams.push(t);
+        }
+        if (!validTeams.includes(currentBracket.r32[matchId])) {
+          delete currentBracket.r32[matchId];
+        }
+      }
+    });
+    cascadeAfterR32();
+  }
+  currentBracket.thirdQualifiers = q;
+  renderThirds();
+}
+
+/* ==========================================================
+   KNOCKOUT RENDERING
+   ========================================================== */
+function getTeamForSource(src) {
+  if (src.type === 'winner') return currentBracket.groups[src.group]?.[1] || `(Group ${src.group} 1st)`;
+  if (src.type === 'runner') return currentBracket.groups[src.group]?.[2] || `(Group ${src.group} 2nd)`;
+  if (src.type === 'third') {
+    const candidates = src.pool.map(g => currentBracket.groups[g]?.[3]).filter(Boolean);
+    if (candidates.length === 0) return `(3rd from ${src.pool.join('/')})`;
+    return null;
+  }
+}
+
+function getThirdPlaceOptions(pool) {
+  // Only return third-place teams the user has marked as qualifying.
+  const opts = [];
+  pool.forEach(g => {
+    if (!currentBracket.thirdQualifiers.includes(g)) return;
+    const t = currentBracket.groups[g]?.[3];
+    if (t) opts.push({ team: t, group: g });
+  });
+  return opts;
+}
+
+// Determine which group's 3rd-place team should slot into each R32 third-place
+// position, following FIFA's rule that each slot can only take a 3rd from
+// specific groups. Returns object mapping R32 match id → group letter (or null
+// if no valid qualifier). Uses greedy assignment: iterate slots in order, for
+// each take the first available qualifying group from its allowed pool.
+function assignThirdPlaceSlots(qualifiers) {
+  // qualifiers: array of group letters (length 0..8) — the user's picks
+  const slots = R32_MATCHES.filter(m => m.team2.type === 'third');
+  const assignment = {};
+  const used = new Set();
+  slots.forEach(slot => {
+    // Available = qualifiers in this slot's allowed pool that haven't been
+    // assigned yet. Pick alphabetically first for determinism.
+    const available = slot.team2.pool
+      .filter(g => qualifiers.includes(g) && !used.has(g))
+      .sort();
+    if (available.length > 0) {
+      assignment[slot.id] = available[0];
+      used.add(available[0]);
+    } else {
+      assignment[slot.id] = null;
+    }
+  });
+  return assignment;
+}
+
+function renderR32() {
+  const grid = document.getElementById('r32Grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  // Compute the third-place slot assignment from current qualifier picks.
+  const thirdAssignment = assignThirdPlaceSlots(currentBracket.thirdQualifiers || []);
+
+  R32_MATCHES.forEach((m) => {
+    const team1Name = getTeamForSource(m.team1);
+    let team2Display, team2GroupLabel = '';
+    if (m.team2.type === 'third') {
+      const assignedGroup = thirdAssignment[m.id];
+      if (assignedGroup) {
+        const team = currentBracket.groups[assignedGroup]?.[3];
+        team2Display = team || `(Group ${assignedGroup} 3rd)`;
+        team2GroupLabel = ` <span style="color:rgba(10,26,20,0.5);font-size:11px;font-family:'JetBrains Mono',monospace;">(${assignedGroup}-3)</span>`;
+      } else {
+        team2Display = `(no 3rd-place qualifier from ${m.team2.pool.join('/')})`;
+      }
+    } else {
+      team2Display = getTeamForSource(m.team2);
+    }
+
+    const possibleWinners = [];
+    if (team1Name && !team1Name.startsWith('(')) possibleWinners.push(team1Name);
+    if (team2Display && !team2Display.startsWith('(')) possibleWinners.push(team2Display);
+
+    const matchupDiv = document.createElement('div');
+    matchupDiv.className = 'matchup';
+    matchupDiv.innerHTML = `
+      <div class="matchup-id">${m.id} · ${m.label}</div>
+      <div class="matchup-teams"><strong>${team1Name || ''}</strong> <span style="color:rgba(10,26,20,0.4);">vs</span> <strong>${team2Display || ''}</strong>${team2GroupLabel}</div>
+      <select onchange="setR32Winner('${m.id}', this.value)">
+        <option value="">-- Pick winner --</option>
+        ${possibleWinners.map(t => `<option value="${escapeAttr(t)}" ${currentBracket.r32[m.id] === t ? 'selected' : ''}>${t}</option>`).join('')}
+      </select>
+    `;
+    grid.appendChild(matchupDiv);
+  });
+}
+
+function setR32Winner(matchId, team) {
+  if (team) currentBracket.r32[matchId] = team;
+  else delete currentBracket.r32[matchId];
+  cascadeAfterR32();
+}
+
+function cascadeAfterR32() {
+  Object.keys(currentBracket.r16).forEach(r16id => {
+    const idx = parseInt(r16id.split('-')[1]) - 1;
+    const [a, b] = R16_PAIRINGS[idx];
+    const possibles = [currentBracket.r32[a], currentBracket.r32[b]].filter(Boolean);
+    if (!possibles.includes(currentBracket.r16[r16id])) delete currentBracket.r16[r16id];
+  });
+  cascadeAfterR16();
+}
+
+function cascadeAfterR16() {
+  Object.keys(currentBracket.qf).forEach(qfid => {
+    const idx = parseInt(qfid.split('-')[1]) - 1;
+    const [a, b] = QF_PAIRINGS[idx];
+    const possibles = [currentBracket.r16[a], currentBracket.r16[b]].filter(Boolean);
+    if (!possibles.includes(currentBracket.qf[qfid])) delete currentBracket.qf[qfid];
+  });
+  cascadeAfterQF();
+}
+
+function cascadeAfterQF() {
+  Object.keys(currentBracket.sf).forEach(sfid => {
+    const idx = parseInt(sfid.split('-')[1]) - 1;
+    const [a, b] = SF_PAIRINGS[idx];
+    const possibles = [currentBracket.qf[a], currentBracket.qf[b]].filter(Boolean);
+    if (!possibles.includes(currentBracket.sf[sfid])) delete currentBracket.sf[sfid];
+  });
+  cascadeAfterSF();
+}
+
+function cascadeAfterSF() {
+  const possibles = [currentBracket.sf['SF-1'], currentBracket.sf['SF-2']].filter(Boolean);
+  if (currentBracket.finalMatch && !possibles.includes(currentBracket.finalMatch)) currentBracket.finalMatch = '';
+  if (currentBracket.champion && !possibles.includes(currentBracket.champion)) currentBracket.champion = '';
+}
+
+function renderR16() {
+  const grid = document.getElementById('r16Grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  R16_PAIRINGS.forEach((pair, idx) => {
+    const r16id = `R16-${idx + 1}`;
+    const t1 = currentBracket.r32[pair[0]] || `(winner of ${pair[0]})`;
+    const t2 = currentBracket.r32[pair[1]] || `(winner of ${pair[1]})`;
+    const possibles = [];
+    if (currentBracket.r32[pair[0]]) possibles.push(currentBracket.r32[pair[0]]);
+    if (currentBracket.r32[pair[1]]) possibles.push(currentBracket.r32[pair[1]]);
+    const div = document.createElement('div');
+    div.className = 'matchup';
+    div.innerHTML = `
+      <div class="matchup-id">${r16id} · Round of 16</div>
+      <div class="matchup-teams"><strong>${t1}</strong> <span style="color:rgba(10,26,20,0.4);">vs</span> <strong>${t2}</strong></div>
+      <select onchange="setR16Winner('${r16id}', this.value)">
+        <option value="">-- Pick winner --</option>
+        ${possibles.map(t => `<option value="${escapeAttr(t)}" ${currentBracket.r16[r16id] === t ? 'selected' : ''}>${t}</option>`).join('')}
+      </select>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function setR16Winner(id, team) {
+  if (team) currentBracket.r16[id] = team;
+  else delete currentBracket.r16[id];
+  cascadeAfterR16();
+}
+
+function renderQF() {
+  const grid = document.getElementById('qfGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  QF_PAIRINGS.forEach((pair, idx) => {
+    const qfid = `QF-${idx + 1}`;
+    const t1 = currentBracket.r16[pair[0]] || `(winner of ${pair[0]})`;
+    const t2 = currentBracket.r16[pair[1]] || `(winner of ${pair[1]})`;
+    const possibles = [];
+    if (currentBracket.r16[pair[0]]) possibles.push(currentBracket.r16[pair[0]]);
+    if (currentBracket.r16[pair[1]]) possibles.push(currentBracket.r16[pair[1]]);
+    const div = document.createElement('div');
+    div.className = 'matchup';
+    div.innerHTML = `
+      <div class="matchup-id">${qfid} · Quarterfinal</div>
+      <div class="matchup-teams"><strong>${t1}</strong> <span style="color:rgba(10,26,20,0.4);">vs</span> <strong>${t2}</strong></div>
+      <select onchange="setQFWinner('${qfid}', this.value)">
+        <option value="">-- Pick winner --</option>
+        ${possibles.map(t => `<option value="${escapeAttr(t)}" ${currentBracket.qf[qfid] === t ? 'selected' : ''}>${t}</option>`).join('')}
+      </select>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function setQFWinner(id, team) {
+  if (team) currentBracket.qf[id] = team;
+  else delete currentBracket.qf[id];
+  cascadeAfterQF();
+}
+
+function renderSF() {
+  const grid = document.getElementById('sfGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  SF_PAIRINGS.forEach((pair, idx) => {
+    const sfid = `SF-${idx + 1}`;
+    const t1 = currentBracket.qf[pair[0]] || `(winner of ${pair[0]})`;
+    const t2 = currentBracket.qf[pair[1]] || `(winner of ${pair[1]})`;
+    const possibles = [];
+    if (currentBracket.qf[pair[0]]) possibles.push(currentBracket.qf[pair[0]]);
+    if (currentBracket.qf[pair[1]]) possibles.push(currentBracket.qf[pair[1]]);
+    const div = document.createElement('div');
+    div.className = 'matchup';
+    div.innerHTML = `
+      <div class="matchup-id">${sfid} · Semifinal</div>
+      <div class="matchup-teams"><strong>${t1}</strong> <span style="color:rgba(10,26,20,0.4);">vs</span> <strong>${t2}</strong></div>
+      <select onchange="setSFWinner('${sfid}', this.value)">
+        <option value="">-- Pick winner --</option>
+        ${possibles.map(t => `<option value="${escapeAttr(t)}" ${currentBracket.sf[sfid] === t ? 'selected' : ''}>${t}</option>`).join('')}
+      </select>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function setSFWinner(id, team) {
+  if (team) currentBracket.sf[id] = team;
+  else delete currentBracket.sf[id];
+  cascadeAfterSF();
+  renderFinal();
+  populateChampionDropdown();
+}
+
+function renderFinal() {
+  const grid = document.getElementById('finalGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const t1 = currentBracket.sf['SF-1'] || '(winner of SF-1)';
+  const t2 = currentBracket.sf['SF-2'] || '(winner of SF-2)';
+  const div = document.createElement('div');
+  div.className = 'matchup';
+  div.style.maxWidth = '420px';
+  div.style.margin = '0 auto';
+  div.innerHTML = `
+    <div class="matchup-id">FINAL · MetLife Stadium · July 19, 2026</div>
+    <div class="matchup-teams"><strong>${t1}</strong> <span style="color:rgba(10,26,20,0.4);">vs</span> <strong>${t2}</strong></div>
+  `;
+  grid.appendChild(div);
+}
+
+function populateChampionDropdown() {
+  const select = document.getElementById('championPick');
+  if (!select) return;
+  const possibles = [];
+  if (currentBracket.sf['SF-1']) possibles.push(currentBracket.sf['SF-1']);
+  if (currentBracket.sf['SF-2']) possibles.push(currentBracket.sf['SF-2']);
+  if (possibles.length === 0) {
+    select.innerHTML = '<option value="">-- Complete the semifinals first --</option>';
+  } else {
+    select.innerHTML = '<option value="">-- Select your champion --</option>' +
+      possibles.map(t => `<option value="${escapeAttr(t)}" ${currentBracket.champion === t ? 'selected' : ''}>${t}</option>`).join('');
+  }
+  select.onchange = function() {
+    currentBracket.champion = this.value;
+    currentBracket.finalMatch = this.value;
+  };
+}
+
+/* ==========================================================
+   REVIEW + SUBMIT
+   ========================================================== */
+function reviewBracket() {
+  currentBracket.goldenBoot = document.getElementById('goldenBoot').value.trim();
+  const fA = document.getElementById('finalScoreA').value;
+  const fB = document.getElementById('finalScoreB').value;
+  currentBracket.finalScoreA = fA !== '' ? parseInt(fA) : null;
+  currentBracket.finalScoreB = fB !== '' ? parseInt(fB) : null;
+
+  const issues = [];
+  GROUP_LETTERS.forEach(g => {
+    const p = currentBracket.groups[g] || {};
+    if (!p[1] || !p[2] || !p[3]) issues.push(`Group ${g} is missing a 1st / 2nd / 3rd place pick.`);
+  });
+  const qualCount = (currentBracket.thirdQualifiers || []).length;
+  if (qualCount !== 8) issues.push(`You must pick exactly 8 third-place qualifiers (currently ${qualCount}).`);
+  R32_MATCHES.forEach(m => { if (!currentBracket.r32[m.id]) issues.push(`Round of 32: ${m.id} missing winner.`); });
+  for (let i = 1; i <= 8; i++) if (!currentBracket.r16[`R16-${i}`]) issues.push(`Round of 16: R16-${i} missing.`);
+  for (let i = 1; i <= 4; i++) if (!currentBracket.qf[`QF-${i}`]) issues.push(`Quarterfinal: QF-${i} missing.`);
+  for (let i = 1; i <= 2; i++) if (!currentBracket.sf[`SF-${i}`]) issues.push(`Semifinal: SF-${i} missing.`);
+  if (!currentBracket.champion) issues.push('Champion not selected.');
+  if (!currentBracket.goldenBoot) issues.push('Golden Boot pick missing.');
+  if (currentBracket.finalScoreA === null || currentBracket.finalScoreB === null) issues.push('Final score tiebreaker missing.');
+
+  if (issues.length > 0) {
+    alert('Bracket incomplete:\n\n' + issues.slice(0, 10).join('\n') + (issues.length > 10 ? `\n...and ${issues.length - 10} more.` : ''));
+    return;
+  }
+
+  const c = document.getElementById('reviewContent');
+  let html = `<div class="review-section"><h3>${escapeHtml(currentBracket.name)} · ${escapeHtml(currentBracket.email)}</h3></div>`;
+  html += '<div class="review-section"><h3>Group Stage</h3>';
+  GROUP_LETTERS.forEach(g => {
+    const p = currentBracket.groups[g] || {};
+    html += `<div class="review-row"><span class="label">Group ${g}</span><span class="picked">${escapeHtml(p[1] || '-')} · ${escapeHtml(p[2] || '-')} · ${escapeHtml(p[3] || '-')} (3rd)</span></div>`;
+  });
+  html += '</div>';
+  html += '<div class="review-section"><h3>3rd-Place Qualifiers (8)</h3>';
+  const qualList = (currentBracket.thirdQualifiers || []).map(g => `${currentBracket.groups[g]?.[3]} (${g})`).join(', ');
+  html += `<div class="review-row"><span class="label">Advancing</span><span class="picked">${escapeHtml(qualList || '-')}</span></div>`;
+  html += '</div>';
+  html += '<div class="review-section"><h3>Round of 32</h3>';
+  R32_MATCHES.forEach(m => {
+    html += `<div class="review-row"><span class="label">${m.id}</span><span class="picked">${escapeHtml(currentBracket.r32[m.id])}</span></div>`;
+  });
+  html += '</div>';
+  html += '<div class="review-section"><h3>Round of 16 → Final</h3>';
+  for (let i = 1; i <= 8; i++) html += `<div class="review-row"><span class="label">R16-${i}</span><span class="picked">${escapeHtml(currentBracket.r16[`R16-${i}`])}</span></div>`;
+  for (let i = 1; i <= 4; i++) html += `<div class="review-row"><span class="label">QF-${i}</span><span class="picked">${escapeHtml(currentBracket.qf[`QF-${i}`])}</span></div>`;
+  for (let i = 1; i <= 2; i++) html += `<div class="review-row"><span class="label">SF-${i}</span><span class="picked">${escapeHtml(currentBracket.sf[`SF-${i}`])}</span></div>`;
+  html += `<div class="review-row" style="font-weight:700;border-top:1px solid var(--ink);margin-top:6px;padding-top:8px;"><span class="label">CHAMPION</span><span class="picked" style="color:var(--gold);">${escapeHtml(currentBracket.champion)}</span></div>`;
+  html += `<div class="review-row"><span class="label">Final Score</span><span class="picked">${currentBracket.finalScoreA} – ${currentBracket.finalScoreB}</span></div>`;
+  html += `<div class="review-row"><span class="label">Golden Boot</span><span class="picked">${escapeHtml(currentBracket.goldenBoot)}</span></div>`;
+  html += '</div>';
+
+  c.innerHTML = html;
+  showView('view-review');
+}
+
+async function submitBracket() {
+  if (!fbReady()) { alert('Backend not configured. Please contact the commissioner.'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  try {
+    await loadPoolMeta();
+    if (poolMeta && poolMeta.locked) {
+      alert('Pool is locked — entries can no longer be submitted.');
+      btn.disabled = false;
+      btn.textContent = 'Submit Bracket & Lock In';
+      return;
+    }
+
+    // Re-check email isn't already used (race condition guard)
+    const emailExists = await fbCheckEmailExists(currentBracket.email);
+    if (emailExists) {
+      alert(`A bracket has already been submitted from ${currentBracket.email}. Only one bracket per person.`);
+      btn.disabled = false;
+      btn.textContent = 'Submit Bracket & Lock In';
+      return;
+    }
+
+    const id = 'p_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+    const record = {
+      id,
+      name: currentBracket.name,
+      email: currentBracket.email,
+      emailLower: currentBracket.email.toLowerCase().trim(),
+      submittedAt: new Date().toISOString(),
+      paid: false,
+      bracket: currentBracket
+    };
+
+    await fbSetDoc('participants/' + id, record);
+
+    document.getElementById('confirmPlayerName').textContent = `Confirmed: ${currentBracket.name} · ID #${id.slice(-6).toUpperCase()}`;
+    showView('view-confirm');
+  } catch (err) {
+    console.error(err);
+    alert('Could not save bracket: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Submit Bracket & Lock In';
+  }
+}
+
+/* ==========================================================
+   LEADERBOARD (public)
+   ========================================================== */
+async function loadLeaderboard() {
+  const container = document.getElementById('leaderboardContent');
+  container.innerHTML = '<div class="loading">Loading standings...</div>';
+  if (!fbReady()) { container.innerHTML = '<p style="color:var(--red);">Backend not configured.</p>'; return; }
+
+  try {
+    const participants = await fbGetAllParticipants();
+    await loadResults();
+
+    if (participants.length === 0) {
+      container.innerHTML = '<p style="font-style:italic;color:rgba(10,26,20,0.6);text-align:center;padding:40px;">No brackets submitted yet. Be the first!</p>';
+      return;
+    }
+
+    const scored = participants.map(p => ({ ...p, score: calculateScore(p.bracket, officialResults) }));
+    scored.sort((a, b) => b.score - a.score);
+
+    let html = `<p style="font-size:13px;color:rgba(10,26,20,0.6);margin-bottom:8px;">${scored.length} participant${scored.length !== 1 ? 's' : ''} · pot: $${scored.length * (poolMeta?.settings?.buyIn || 10)}</p>`;
+    html += '<table class="leaderboard"><thead><tr><th>#</th><th>Player</th><th>Champion Pick</th><th style="text-align:right;">Score</th></tr></thead><tbody>';
+    scored.forEach((p, idx) => {
+      const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
+      html += `<tr><td class="rank ${rankClass}">${idx + 1}</td><td><strong>${escapeHtml(p.name)}</strong></td><td>${escapeHtml(p.bracket.champion || '—')}</td><td class="score">${p.score}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    container.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = '<p style="color:var(--red);">Could not load leaderboard: ' + err.message + '</p>';
+  }
+}
+
+async function loadResults() {
+  try {
+    const r = await fbGetDoc('pool/results');
+    officialResults = r || {};
+  } catch (e) { officialResults = {}; }
+}
+
+/* ==========================================================
+   SCORING ENGINE
+   ========================================================== */
+function calculateScore(bracket, results) {
+  if (!bracket || !results) return 0;
+  let score = 0;
+
+  GROUP_LETTERS.forEach(g => {
+    const picks = bracket.groups?.[g] || {};
+    const actual = results.groups?.[g] || {};
+    if (picks[1] && picks[1] === actual[1]) score += 1;
+    if (picks[2] && picks[2] === actual[2]) score += 1;
+    if (picks[3] && results.thirdQualified && results.thirdQualified.includes(picks[3])) score += 1;
+  });
+
+  R32_MATCHES.forEach(m => {
+    if (bracket.r32?.[m.id] && bracket.r32[m.id] === results.r32?.[m.id]) score += 2;
+  });
+  for (let i = 1; i <= 8; i++) {
+    const id = `R16-${i}`;
+    if (bracket.r16?.[id] && bracket.r16[id] === results.r16?.[id]) score += 4;
+  }
+  for (let i = 1; i <= 4; i++) {
+    const id = `QF-${i}`;
+    if (bracket.qf?.[id] && bracket.qf[id] === results.qf?.[id]) score += 8;
+  }
+  for (let i = 1; i <= 2; i++) {
+    const id = `SF-${i}`;
+    if (bracket.sf?.[id] && bracket.sf[id] === results.sf?.[id]) score += 16;
+  }
+  if (bracket.champion && bracket.champion === results.champion) score += 32;
+
+  if (bracket.goldenBoot && results.goldenBoot && bracket.goldenBoot.toLowerCase().trim() === results.goldenBoot.toLowerCase().trim()) score += 5;
+
+  if (results.finalScoreA != null && results.finalScoreB != null && bracket.finalScoreA != null && bracket.finalScoreB != null) {
+    if (bracket.finalScoreA === results.finalScoreA && bracket.finalScoreB === results.finalScoreB) score += 10;
+    else if ((bracket.finalScoreA - bracket.finalScoreB) === (results.finalScoreA - results.finalScoreB)) score += 3;
+  }
+  return score;
+}
+
+/* ==========================================================
+   ADMIN
+   ========================================================== */
+async function loadPoolMeta() {
+  try {
+    const meta = await fbGetDoc('pool/meta');
+    poolMeta = meta || { locked: false, settings: { buyIn: 10, prize1: 60, prize2: 25, prize3: 10, prizeLast: 5 } };
+  } catch (e) {
+    poolMeta = { locked: false, settings: { buyIn: 10, prize1: 60, prize2: 25, prize3: 10, prizeLast: 5 } };
+  }
+}
+
+async function checkAdminState() {
+  await loadPoolMeta();
+  if (poolMeta && poolMeta.locked) {
+    document.getElementById('poolLockedBanner').style.display = 'flex';
+  }
+  if (isAdmin) {
+    document.getElementById('adminAuthCard').classList.add('hidden');
+    document.getElementById('adminPanel').classList.remove('hidden');
+    await loadAdminPanel();
+  } else {
+    document.getElementById('adminAuthCard').classList.remove('hidden');
+    document.getElementById('adminPanel').classList.add('hidden');
+  }
+}
+
+function adminLogin() {
+  const pass = document.getElementById('adminPass').value;
+  if (!pass) { alert('Enter a passcode.'); return; }
+  if (!window.FB) { alert('Backend not ready.'); return; }
+  if (pass === window.FB.ADMIN_PASSCODE) {
+    isAdmin = true;
+    checkAdminState();
+  } else {
+    alert('Incorrect passcode.');
+  }
+}
+
+async function loadAdminPanel() {
+  const banner = document.getElementById('poolStatusBanner');
+  const text = document.getElementById('poolStatusText');
+  const btn = document.getElementById('lockToggleBtn');
+  if (poolMeta && poolMeta.locked) {
+    banner.classList.add('warn');
+    text.textContent = '🔒 POOL LOCKED · no new entries can be submitted';
+    btn.textContent = 'UNLOCK POOL';
+  } else {
+    banner.classList.remove('warn');
+    text.textContent = '✓ Pool status: OPEN · accepting entries';
+    btn.textContent = 'LOCK POOL';
+  }
+
+  const s = poolMeta?.settings || { buyIn: 10, prize1: 60, prize2: 25, prize3: 10, prizeLast: 5 };
+  document.getElementById('setBuyIn').value = s.buyIn;
+  document.getElementById('setPrize1').value = s.prize1;
+  document.getElementById('setPrize2').value = s.prize2;
+  document.getElementById('setPrize3').value = s.prize3;
+  document.getElementById('setPrizeLast').value = s.prizeLast;
+
+  await renderAdminParticipants();
+  await renderAdminResultsForm();
+  await renderAdminStandings();
+}
+
+document.querySelectorAll('.admin-tab-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.admin-tab-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    document.querySelectorAll('[id^="admintab-"]').forEach(p => p.classList.add('hidden'));
+    document.getElementById('admintab-' + b.dataset.admintab).classList.remove('hidden');
+  });
+});
+
+async function renderAdminParticipants() {
+  const c = document.getElementById('adminParticipantsTable');
+  c.innerHTML = '<div class="loading">Loading...</div>';
+  const participants = await fbGetAllParticipants();
+  cachedParticipants = participants;
+  if (participants.length === 0) {
+    c.innerHTML = '<p style="font-style:italic;color:rgba(10,26,20,0.6);">No participants yet.</p>';
+    return;
+  }
+  participants.sort((a, b) => new Date(a.submittedAt) - new Date(b.submittedAt));
+  const paid = participants.filter(p => p.paid).length;
+  const buyIn = poolMeta?.settings?.buyIn || 10;
+  const pot = paid * buyIn;
+
+  let html = `
+    <div class="stat-strip" style="margin-bottom:20px;">
+      <div class="stat"><div class="stat-num">${participants.length}</div><div class="stat-lbl">Submitted</div></div>
+      <div class="stat"><div class="stat-num">${paid}</div><div class="stat-lbl">Paid</div></div>
+      <div class="stat"><div class="stat-num">${participants.length - paid}</div><div class="stat-lbl">Outstanding</div></div>
+      <div class="stat"><div class="stat-num">$${pot}</div><div class="stat-lbl">Pot Collected</div></div>
+    </div>
+    <table class="leaderboard"><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Submitted</th><th>Paid</th><th></th></tr></thead><tbody>
+  `;
+  participants.forEach((p, idx) => {
+    const date = new Date(p.submittedAt).toLocaleString();
+    html += `
+      <tr>
+        <td>${idx + 1}</td>
+        <td><strong>${escapeHtml(p.name)}</strong></td>
+        <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;">${escapeHtml(p.email)}</span></td>
+        <td style="font-size:12px;color:rgba(10,26,20,0.6);">${date}</td>
+        <td><span class="${p.paid ? 'status-paid' : 'status-unpaid'}">${p.paid ? '✓ PAID' : '○ UNPAID'}</span></td>
+        <td>
+          <button class="btn secondary" style="padding:6px 12px;font-size:10px;" onclick="viewParticipantBracket('${p.id}')">View</button>
+          <button class="btn secondary" style="padding:6px 12px;font-size:10px;" onclick="togglePaid('${p.id}')">${p.paid ? 'Mark Unpaid' : 'Mark Paid'}</button>
+          <button class="btn danger" style="padding:6px 12px;font-size:10px;" onclick="deleteParticipant('${p.id}')">Remove</button>
+        </td>
+      </tr>
+    `;
+  });
+  html += '</tbody></table>';
+  c.innerHTML = html;
+}
+
+async function togglePaid(id) {
+  try {
+    const p = await fbGetDoc('participants/' + id);
+    if (!p) return;
+    p.paid = !p.paid;
+    await fbSetDoc('participants/' + id, p);
+    await renderAdminParticipants();
+  } catch (err) { console.error(err); alert('Failed: ' + err.message); }
+}
+
+async function deleteParticipant(id) {
+  if (!confirm('Permanently remove this participant?')) return;
+  try {
+    await fbDeleteDoc('participants/' + id);
+    await renderAdminParticipants();
+  } catch (err) { console.error(err); alert('Failed: ' + err.message); }
+}
+
+async function togglePoolLock() {
+  poolMeta = poolMeta || { settings: { buyIn: 10, prize1: 60, prize2: 25, prize3: 10, prizeLast: 5 } };
+  poolMeta.locked = !poolMeta.locked;
+  await fbSetDoc('pool/meta', poolMeta);
+  await loadAdminPanel();
+}
+
+async function renderAdminResultsForm() {
+  const c = document.getElementById('adminResultsForm');
+  await loadResults();
+
+  let html = '<div class="round-header">Group Stage Actuals <span class="pts-tag">12 groups</span></div><div class="groups-grid">';
+  GROUP_LETTERS.forEach(g => {
+    const teams = GROUPS[g].teams;
+    const r = officialResults.groups?.[g] || {};
+    html += `
+      <div class="group-card">
+        <div class="group-header"><span>Group ${g}</span></div>
+        <label style="margin-top:8px;">1st place</label>
+        <select onchange="setActualGroup('${g}', 1, this.value)">
+          <option value="">--</option>
+          ${teams.map(t => `<option value="${escapeAttr(t)}" ${r[1] === t ? 'selected' : ''}>${t}</option>`).join('')}
+        </select>
+        <label style="margin-top:8px;">2nd place</label>
+        <select onchange="setActualGroup('${g}', 2, this.value)">
+          <option value="">--</option>
+          ${teams.map(t => `<option value="${escapeAttr(t)}" ${r[2] === t ? 'selected' : ''}>${t}</option>`).join('')}
+        </select>
+        <label style="margin-top:8px;">3rd place</label>
+        <select onchange="setActualGroup('${g}', 3, this.value)">
+          <option value="">--</option>
+          ${teams.map(t => `<option value="${escapeAttr(t)}" ${r[3] === t ? 'selected' : ''}>${t}</option>`).join('')}
+        </select>
+      </div>
+    `;
+  });
+  html += '</div>';
+
+  // Admin: pick which 8 third-place teams actually qualified for the R32
+  const adminThirds = officialResults.thirdQualifierGroups || [];
+  html += '<div class="round-header" style="margin-top:32px;">Actual 3rd-Place Qualifiers <span class="pts-tag">pick 8</span></div>';
+  html += `<div class="card" style="margin-top:0;"><p style="font-size:13px;color:rgba(10,26,20,0.7);margin:0 0 14px;">Tick the 8 groups whose 3rd-place team actually advanced to the Round of 32. <strong>${adminThirds.length}</strong> / 8 selected.</p>`;
+  html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;">';
+  GROUP_LETTERS.forEach(g => {
+    const team = officialResults.groups?.[g]?.[3];
+    const checked = adminThirds.includes(g);
+    const disabled = !checked && adminThirds.length >= 8;
+    html += `
+      <label style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);background:rgba(255,255,255,0.4);cursor:${team ? 'pointer' : 'not-allowed'};opacity:${team ? '1' : '0.5'};">
+        <input type="checkbox" ${checked ? 'checked' : ''} ${disabled || !team ? 'disabled' : ''} onchange="toggleAdminThird('${g}', this.checked)" style="accent-color:var(--gold);width:18px;height:18px;" />
+        <div style="flex:1;font-size:13px;"><strong>Group ${g}:</strong> ${escapeHtml(team || '(no 3rd entered)')}</div>
+      </label>
+    `;
+  });
+  html += '</div></div>';
+
+  html += '<div class="round-header" style="margin-top:32px;">Round of 32 Actuals</div><div class="matchup-grid">';
+  R32_MATCHES.forEach(m => {
+    const r = officialResults.r32?.[m.id] || '';
+    html += `
+      <div class="matchup">
+        <div class="matchup-id">${m.id}</div>
+        <div class="matchup-teams">${m.label}</div>
+        <select onchange="setActualR32('${m.id}', this.value)">
+          <option value="">-- winner --</option>
+          ${ALL_TEAMS.map(t => `<option value="${escapeAttr(t)}" ${r === t ? 'selected' : ''}>${t}</option>`).join('')}
+        </select>
+      </div>
+    `;
+  });
+  html += '</div>';
+
+  ['R16', 'QF', 'SF'].forEach(round => {
+    const count = round === 'R16' ? 8 : round === 'QF' ? 4 : 2;
+    const ptsTag = round === 'R16' ? '4 pts each' : round === 'QF' ? '8 pts each' : '16 pts each';
+    html += `<div class="round-header" style="margin-top:32px;">${round} Actuals <span class="pts-tag">${ptsTag}</span></div><div class="matchup-grid">`;
+    for (let i = 1; i <= count; i++) {
+      const id = `${round}-${i}`;
+      const key = round.toLowerCase();
+      const r = officialResults[key]?.[id] || '';
+      html += `
+        <div class="matchup">
+          <div class="matchup-id">${id}</div>
+          <select onchange="setActualKO('${key}', '${id}', this.value)">
+            <option value="">-- winner --</option>
+            ${ALL_TEAMS.map(t => `<option value="${escapeAttr(t)}" ${r === t ? 'selected' : ''}>${t}</option>`).join('')}
+          </select>
+        </div>
+      `;
+    }
+    html += '</div>';
+  });
+
+  html += `
+    <div class="round-header" style="margin-top:32px;">Final &amp; Tiebreakers</div>
+    <div class="card" style="margin-top:0;">
+      <label>Champion (32 pts)</label>
+      <select onchange="setActualChampion(this.value)">
+        <option value="">--</option>
+        ${ALL_TEAMS.map(t => `<option value="${escapeAttr(t)}" ${officialResults.champion === t ? 'selected' : ''}>${t}</option>`).join('')}
+      </select>
+      <div class="form-row" style="margin-top:18px;">
+        <div>
+          <label>Golden Boot (5 pts)</label>
+          <input type="text" id="actualGoldenBoot" value="${escapeAttr(officialResults.goldenBoot || '')}" onchange="setActualGoldenBoot(this.value)" />
+        </div>
+        <div>
+          <label>Final score (champion / runner-up)</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="number" value="${officialResults.finalScoreA ?? ''}" min="0" style="width:60px;" onchange="setActualFinalScore('A', this.value)" />
+            <span>–</span>
+            <input type="number" value="${officialResults.finalScoreB ?? ''}" min="0" style="width:60px;" onchange="setActualFinalScore('B', this.value)" />
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  c.innerHTML = html;
+}
+
+function setActualGroup(g, place, team) {
+  officialResults.groups = officialResults.groups || {};
+  officialResults.groups[g] = officialResults.groups[g] || {};
+  if (team) officialResults.groups[g][place] = team;
+  else delete officialResults.groups[g][place];
+  recomputeThirdQualified();
+}
+
+function toggleAdminThird(g, checked) {
+  let list = officialResults.thirdQualifierGroups || [];
+  if (checked) {
+    if (!list.includes(g) && list.length < 8) list.push(g);
+  } else {
+    list = list.filter(x => x !== g);
+  }
+  officialResults.thirdQualifierGroups = list;
+  // Also store the actual teams (for scoring lookup)
+  officialResults.thirdQualified = list.map(gg => officialResults.groups?.[gg]?.[3]).filter(Boolean);
+  // Re-render the admin form to update count + disabled state
+  renderAdminResultsForm();
+}
+
+function setActualR32(id, team) {
+  officialResults.r32 = officialResults.r32 || {};
+  if (team) officialResults.r32[id] = team;
+  else delete officialResults.r32[id];
+}
+function setActualKO(round, id, team) {
+  officialResults[round] = officialResults[round] || {};
+  if (team) officialResults[round][id] = team;
+  else delete officialResults[round][id];
+}
+function setActualChampion(team) { officialResults.champion = team || ''; }
+function setActualGoldenBoot(name) { officialResults.goldenBoot = name; }
+function setActualFinalScore(which, val) {
+  officialResults['finalScore' + which] = val !== '' ? parseInt(val) : null;
+}
+
+async function saveResults() {
+  try {
+    await fbSetDoc('pool/results', officialResults);
+    alert('Results saved. Leaderboard updated.');
+    await renderAdminStandings();
+  } catch (err) { console.error(err); alert('Could not save: ' + err.message); }
+}
+
+async function renderAdminStandings() {
+  const c = document.getElementById('adminStandingsTable');
+  c.innerHTML = '<div class="loading">Loading...</div>';
+  const participants = cachedParticipants || await fbGetAllParticipants();
+  await loadResults();
+  if (participants.length === 0) {
+    c.innerHTML = '<p style="font-style:italic;color:rgba(10,26,20,0.6);">No participants yet.</p>';
+    return;
+  }
+  const scored = participants.map(p => ({ ...p, score: calculateScore(p.bracket, officialResults) }));
+  scored.sort((a, b) => b.score - a.score);
+
+  const buyIn = poolMeta?.settings?.buyIn || 10;
+  const totalPot = scored.filter(s => s.paid).length * buyIn;
+  const s = poolMeta?.settings || { prize1: 60, prize2: 25, prize3: 10, prizeLast: 5 };
+
+  let html = `
+    <div class="prizes" style="margin-bottom:24px;">
+      <div class="prize"><div class="prize-place">1st</div><div class="prize-label">${escapeHtml(scored[0]?.name || '—')}</div><div class="prize-amount">$${Math.round(totalPot * s.prize1 / 100)}</div></div>
+      <div class="prize second"><div class="prize-place">2nd</div><div class="prize-label">${escapeHtml(scored[1]?.name || '—')}</div><div class="prize-amount">$${Math.round(totalPot * s.prize2 / 100)}</div></div>
+      <div class="prize third"><div class="prize-place">3rd</div><div class="prize-label">${escapeHtml(scored[2]?.name || '—')}</div><div class="prize-amount">$${Math.round(totalPot * s.prize3 / 100)}</div></div>
+      <div class="prize last"><div class="prize-place">Last</div><div class="prize-label">${escapeHtml(scored[scored.length - 1]?.name || '—')}</div><div class="prize-amount">$${Math.round(totalPot * s.prizeLast / 100)}</div></div>
+    </div>
+    <table class="leaderboard"><thead><tr><th>#</th><th>Player</th><th>Champion</th><th>Paid</th><th style="text-align:right;">Score</th></tr></thead><tbody>
+  `;
+  scored.forEach((p, idx) => {
+    const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
+    html += `<tr><td class="rank ${rankClass}">${idx + 1}</td><td><strong>${escapeHtml(p.name)}</strong></td><td>${escapeHtml(p.bracket.champion || '—')}</td><td><span class="${p.paid ? 'status-paid' : 'status-unpaid'}">${p.paid ? '✓' : '○'}</span></td><td class="score">${p.score}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  c.innerHTML = html;
+}
+
+async function saveSettings() {
+  poolMeta = poolMeta || {};
+  poolMeta.settings = {
+    buyIn: parseInt(document.getElementById('setBuyIn').value) || 10,
+    prize1: parseInt(document.getElementById('setPrize1').value) || 60,
+    prize2: parseInt(document.getElementById('setPrize2').value) || 25,
+    prize3: parseInt(document.getElementById('setPrize3').value) || 10,
+    prizeLast: parseInt(document.getElementById('setPrizeLast').value) || 5
+  };
+  try {
+    await fbSetDoc('pool/meta', poolMeta);
+    alert('Settings saved.');
+  } catch (err) { alert('Save failed: ' + err.message); }
+}
+
+async function confirmReset() {
+  const confirmText = prompt('This will permanently delete ALL participants, results, and settings. Type RESET to confirm.');
+  if (confirmText !== 'RESET') return;
+  try {
+    const participants = await fbGetAllParticipants();
+    for (const p of participants) {
+      await fbDeleteDoc('participants/' + p.id);
+    }
+    try { await fbDeleteDoc('pool/results'); } catch (e) {}
+    try { await fbDeleteDoc('pool/meta'); } catch (e) {}
+    poolMeta = null;
+    officialResults = {};
+    cachedParticipants = null;
+    alert('Pool has been reset.');
+    isAdmin = false;
+    showView('view-welcome');
+  } catch (err) { alert('Reset failed: ' + err.message); }
+}
+
+/* ==========================================================
+   HELPERS
+   ========================================================== */
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function escapeAttr(str) {
+  if (str == null) return '';
+  return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+function getFlagCode(team) {
+  const map = {
+    'Mexico':'MEX','South Africa':'RSA','Korea Republic':'KOR','Czechia':'CZE',
+    'Canada':'CAN','Bosnia and Herzegovina':'BIH','Qatar':'QAT','Switzerland':'SUI',
+    'Brazil':'BRA','Morocco':'MAR','Haiti':'HAI','Scotland':'SCO',
+    'United States':'USA','Paraguay':'PAR','Australia':'AUS','Türkiye':'TUR',
+    'Germany':'GER','Curaçao':'CUW','Ivory Coast':'CIV','Ecuador':'ECU',
+    'Netherlands':'NED','Japan':'JPN','Sweden':'SWE','Tunisia':'TUN',
+    'Belgium':'BEL','Egypt':'EGY','Iran':'IRN','New Zealand':'NZL',
+    'Spain':'ESP','Cape Verde':'CPV','Saudi Arabia':'KSA','Uruguay':'URU',
+    'France':'FRA','Senegal':'SEN','Iraq':'IRQ','Norway':'NOR',
+    'Argentina':'ARG','Algeria':'ALG','Austria':'AUT','Jordan':'JOR',
+    'Portugal':'POR','DR Congo':'COD','Uzbekistan':'UZB','Colombia':'COL',
+    'England':'ENG','Croatia':'CRO','Ghana':'GHA','Panama':'PAN'
+  };
+  return map[team] || team.substring(0, 3).toUpperCase();
+}
+
+/* ==========================================================
+   BRACKET VIEWER (used by both self-lookup and commissioner)
+   ========================================================== */
+
+// Render a submitted bracket as read-only HTML for display.
+function renderBracketReadOnly(record) {
+  const b = record.bracket || {};
+  const submittedDate = record.submittedAt ? new Date(record.submittedAt).toLocaleString() : '—';
+  const paidLabel = record.paid ? '<span class="status-paid">✓ PAID</span>' : '<span class="status-unpaid">○ UNPAID</span>';
+
+  let html = '';
+
+  // Header
+  html += `
+    <div style="border-bottom:2px solid var(--ink); padding-bottom:16px; margin-bottom:24px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:rgba(10,26,20,0.6); margin-bottom:8px;">Submitted Bracket</div>
+      <h2 style="font-family:'Fraunces',serif; font-weight:800; font-size:28px; margin:0 0 6px; letter-spacing:-0.01em;">${escapeHtml(record.name || '—')}</h2>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; color:rgba(10,26,20,0.6);">${escapeHtml(record.email || '—')} · ${paidLabel} · Submitted ${escapeHtml(submittedDate)}</div>
+    </div>
+  `;
+
+  // Group stage picks
+  html += '<div class="review-section"><h3>Group Stage Picks</h3>';
+  GROUP_LETTERS.forEach(g => {
+    const p = b.groups?.[g] || {};
+    html += `<div class="review-row"><span class="label">Group ${g}</span><span class="picked">${escapeHtml(p[1] || '—')} · ${escapeHtml(p[2] || '—')} · ${escapeHtml(p[3] || '—')} <span style="color:rgba(10,26,20,0.5);font-weight:400;">(3rd)</span></span></div>`;
+  });
+  html += '</div>';
+
+  // Third-place qualifiers
+  const qualifiers = b.thirdQualifiers || [];
+  if (qualifiers.length > 0) {
+    html += '<div class="review-section"><h3>3rd-Place Qualifiers</h3>';
+    const teams = qualifiers.map(g => `${b.groups?.[g]?.[3] || '?'} <span style="color:rgba(10,26,20,0.5);font-size:11px;font-family:\'JetBrains Mono\',monospace;">(${g})</span>`).join(', ');
+    html += `<div class="review-row"><span class="label">Advancing (8)</span><span class="picked">${teams}</span></div>`;
+    html += '</div>';
+  }
+
+  // Round of 32
+  html += '<div class="review-section"><h3>Round of 32</h3>';
+  R32_MATCHES.forEach(m => {
+    html += `<div class="review-row"><span class="label">${m.id}</span><span class="picked">${escapeHtml(b.r32?.[m.id] || '—')}</span></div>`;
+  });
+  html += '</div>';
+
+  // R16 / QF / SF
+  html += '<div class="review-section"><h3>Knockout Rounds</h3>';
+  for (let i = 1; i <= 8; i++) html += `<div class="review-row"><span class="label">R16-${i}</span><span class="picked">${escapeHtml(b.r16?.[`R16-${i}`] || '—')}</span></div>`;
+  for (let i = 1; i <= 4; i++) html += `<div class="review-row"><span class="label">QF-${i}</span><span class="picked">${escapeHtml(b.qf?.[`QF-${i}`] || '—')}</span></div>`;
+  for (let i = 1; i <= 2; i++) html += `<div class="review-row"><span class="label">SF-${i}</span><span class="picked">${escapeHtml(b.sf?.[`SF-${i}`] || '—')}</span></div>`;
+  html += '</div>';
+
+  // Final
+  html += '<div class="review-section"><h3>Final &amp; Tiebreakers</h3>';
+  html += `<div class="review-row" style="font-weight:700; border-top:1px solid var(--ink); padding-top:8px;"><span class="label">CHAMPION</span><span class="picked" style="color:var(--gold);font-size:16px;">${escapeHtml(b.champion || '—')}</span></div>`;
+  const score = (b.finalScoreA != null && b.finalScoreB != null) ? `${b.finalScoreA} – ${b.finalScoreB}` : '—';
+  html += `<div class="review-row"><span class="label">Final Score</span><span class="picked">${escapeHtml(score)}</span></div>`;
+  html += `<div class="review-row"><span class="label">Golden Boot</span><span class="picked">${escapeHtml(b.goldenBoot || '—')}</span></div>`;
+  html += '</div>';
+
+  return html;
+}
+
+/* ==========================================================
+   PARTICIPANT SELF-LOOKUP
+   ========================================================== */
+function resetMyBracketLookup() {
+  const emailInput = document.getElementById('myBracketEmail');
+  if (emailInput) emailInput.value = '';
+  const err = document.getElementById('myBracketLookupError');
+  if (err) err.style.display = 'none';
+  const result = document.getElementById('myBracketResult');
+  if (result) { result.innerHTML = ''; result.classList.add('hidden'); }
+  const card = document.getElementById('myBracketLookupCard');
+  if (card) card.classList.remove('hidden');
+}
+
+async function lookupMyBracket() {
+  const emailInput = document.getElementById('myBracketEmail');
+  const errBox = document.getElementById('myBracketLookupError');
+  const resultBox = document.getElementById('myBracketResult');
+  const lookupCard = document.getElementById('myBracketLookupCard');
+  const btn = document.getElementById('lookupBtn');
+
+  errBox.style.display = 'none';
+  const email = (emailInput.value || '').trim();
+  if (!email) {
+    errBox.textContent = 'Please enter an email address.';
+    errBox.style.display = 'block';
+    return;
+  }
+  if (!fbReady()) {
+    errBox.textContent = 'Pool backend not available. Try again in a moment.';
+    errBox.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Looking up...';
+
+  try {
+    const record = await fbFindParticipantByEmail(email);
+    if (!record) {
+      errBox.textContent = 'No bracket found for that email. Check the spelling, or submit a bracket first.';
+      errBox.style.display = 'block';
+      return;
+    }
+    // Render
+    resultBox.innerHTML = `
+      <div class="card">
+        ${renderBracketReadOnly(record)}
+        <div class="btn-row">
+          <button class="btn secondary" onclick="resetMyBracketLookup()">Look up another</button>
+          <button class="btn" onclick="showView('view-welcome')">Back to home</button>
+        </div>
+      </div>
+    `;
+    resultBox.classList.remove('hidden');
+    lookupCard.classList.add('hidden');
+  } catch (err) {
+    console.error(err);
+    errBox.textContent = 'Could not look up bracket: ' + (err.message || err);
+    errBox.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Look Up Bracket';
+  }
+}
+
+async function fbFindParticipantByEmail(email) {
+  if (!fbReady()) return null;
+  const collRef = window.FB.collection(window.FB.db, 'participants');
+  const q = window.FB.query(collRef, window.FB.where('emailLower', '==', email.toLowerCase().trim()));
+  const snap = await window.FB.getDocs(q);
+  if (snap.empty) return null;
+  let result = null;
+  snap.forEach(d => { if (!result) result = { id: d.id, ...d.data() }; });
+  return result;
+}
+
+/* ==========================================================
+   COMMISSIONER BRACKET VIEWER (modal)
+   ========================================================== */
+async function viewParticipantBracket(id) {
+  try {
+    const record = await fbGetDoc('participants/' + id);
+    if (!record) { alert('Could not find that participant.'); return; }
+    record.id = id;
+    const modal = document.getElementById('bracketModal');
+    const content = document.getElementById('bracketModalContent');
+    content.innerHTML = renderBracketReadOnly(record);
+    modal.classList.remove('hidden');
+  } catch (err) {
+    console.error(err);
+    alert('Could not load bracket: ' + err.message);
+  }
+}
+
+function closeBracketModal() {
+  document.getElementById('bracketModal').classList.add('hidden');
+}
+
+// Expose for inline onclick handlers
+window.showView = showView;
+window.switchTab = switchTab;
+window.startBracket = startBracket;
+window.placeTeam = placeTeam;
+window.setR32Winner = setR32Winner;
+window.setR16Winner = setR16Winner;
+window.setQFWinner = setQFWinner;
+window.setSFWinner = setSFWinner;
+window.reviewBracket = reviewBracket;
+window.submitBracket = submitBracket;
+window.loadLeaderboard = loadLeaderboard;
+window.checkAdminState = checkAdminState;
+window.adminLogin = adminLogin;
+window.togglePoolLock = togglePoolLock;
+window.togglePaid = togglePaid;
+window.deleteParticipant = deleteParticipant;
+window.saveResults = saveResults;
+window.saveSettings = saveSettings;
+window.confirmReset = confirmReset;
+window.setActualGroup = setActualGroup;
+window.toggleAdminThird = toggleAdminThird;
+window.toggleThirdQualifier = toggleThirdQualifier;
+window.setActualR32 = setActualR32;
+window.setActualKO = setActualKO;
+window.setActualChampion = setActualChampion;
+window.setActualGoldenBoot = setActualGoldenBoot;
+window.setActualFinalScore = setActualFinalScore;
+window.resetForm = resetForm;
+window.lookupMyBracket = lookupMyBracket;
+window.resetMyBracketLookup = resetMyBracketLookup;
+window.viewParticipantBracket = viewParticipantBracket;
+window.closeBracketModal = closeBracketModal;
+
+// Init
+window.addEventListener('firebase-ready', async () => {
+  if (fbReady()) {
+    await loadPoolMeta();
+    if (poolMeta && poolMeta.locked) {
+      document.getElementById('poolLockedBanner').style.display = 'flex';
+    }
+  }
+});
+</script>
+
+<!--
+====================================================================
+  SETUP INSTRUCTIONS  (for the commissioner)
+====================================================================
+
+STEP 1 — Create a Firebase project (free, 5 min)
+  1. Go to https://console.firebase.google.com
+  2. Click "Add project". Name it something like "wc-2026-office-pool".
+  3. Skip Google Analytics (not needed).
+
+STEP 2 — Add a web app to the project
+  1. On the project home, click the </> (web) icon.
+  2. Register the app (any nickname). Don't enable Firebase Hosting yet.
+  3. Firebase will display a snippet that looks like:
+       const firebaseConfig = {
+         apiKey: "AIza...",
+         authDomain: "wc-2026-xxx.firebaseapp.com",
+         projectId: "wc-2026-xxx",
+         storageBucket: "wc-2026-xxx.appspot.com",
+         messagingSenderId: "1234567890",
+         appId: "1:1234567890:web:abc123"
+       };
+  4. Copy those six values into the FIREBASE_CONFIG block near the top of
+     the <script type="module"> tag in this HTML file.
+
+STEP 3 — Enable Firestore Database
+  1. In the Firebase console left sidebar: Build → Firestore Database.
+  2. Click "Create database".
+  3. Choose "Start in TEST mode" for now (we'll lock it down in step 5).
+  4. Pick a location (us-central is fine).
+
+STEP 4 — Change the admin passcode
+  Near the top of the <script type="module"> block, find:
+       const ADMIN_PASSCODE = "IDBWC2026";
+  Change "CHANGE_ME_NOW" to something only you know. Anyone with this
+  string + the file URL can manage the pool, so make it non-obvious.
+
+STEP 5 — (Recommended) Tighten Firestore security rules
+  By default, test mode allows anyone with your config to read/write
+  for 30 days. For an office pool with a small audience that's usually
+  fine, but you can copy these rules into Firestore → Rules tab:
+
+      rules_version = '2';
+      service cloud.firestore {
+        match /databases/{database}/documents {
+          match /{document=**} {
+            allow read, write: if true;
+          }
+        }
+      }
+
+  (This keeps the open access permanently. Since your data isn't
+  sensitive — just bracket picks — this is acceptable. The admin
+  passcode lives in the client code, so anyone determined enough COULD
+  find it by viewing source. For an office pool this risk is low.)
+
+STEP 6 — Host the file
+  Pick whichever you prefer:
+    • Firebase Hosting (free, integrates natively):
+        - In console: Build → Hosting → Get started.
+        - Install Firebase CLI, run `firebase init hosting`, deploy.
+    • Netlify Drop: drag the HTML file to https://app.netlify.com/drop
+    • GitHub Pages: push to a repo, enable Pages, point at the file.
+    • Internal SharePoint / Google Sites: embed as an iframe or page.
+
+  Send the resulting URL to your office.
+
+STEP 7 — Test
+  1. Open the URL in a browser.
+  2. Submit a test bracket as yourself.
+  3. Click "Commissioner", sign in with your passcode.
+  4. You should see your test entry. Mark it paid, then delete it.
+
+That's it. The pool is live.
+
+====================================================================
+-->
+
+</body>
+</html>
