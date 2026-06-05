@@ -771,6 +771,7 @@
         <button class="btn gold" id="startBtn" onclick="startBracket()">Begin My Bracket →</button>
         <button class="btn secondary" onclick="showView('view-leaderboard'); loadLeaderboard();">View Leaderboard</button>
         <button class="btn secondary" onclick="showView('view-mybracket'); resetMyBracketLookup();">View My Bracket</button>
+        <button class="btn secondary" onclick="showView('view-resume')">Fix / Resume My Bracket</button>
       </div>
     </div>
   </div>
@@ -976,6 +977,26 @@
       <p id="myBracketLookupError" style="color:var(--red); font-size:13px; margin-top:14px; display:none;"></p>
     </div>
     <div id="myBracketResult" class="hidden"></div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- VIEW: RESUME / FIX BRACKET -->
+  <!-- ============================================== -->
+  <div id="view-resume" class="view hidden">
+    <div class="card">
+      <div class="card-subtitle">Corrections</div>
+      <h2 class="card-title">Fix / Resume My Bracket</h2>
+      <p style="font-size:14px; color:rgba(10,26,20,0.7);">The bracket logic was corrected (Round-of-32 third-place seeding and the knockout tree). Enter the email you submitted with to reload your bracket. <strong>Your group-stage picks are preserved.</strong> Only knockout picks that can no longer happen under the corrected bracket are cleared, for you to re-select — then re-submit.</p>
+      <div style="margin:18px 0;">
+        <label>Email</label>
+        <input type="email" id="resumeEmail" placeholder="you@idbbank.com" onkeypress="if(event.key==='Enter') resumeBracket()" />
+      </div>
+      <div id="resumeError" style="display:none; color:var(--red); font-size:13px; margin-bottom:12px;"></div>
+      <div class="btn-row">
+        <button class="btn gold" id="resumeBtn" onclick="resumeBracket()">Load &amp; Fix My Bracket</button>
+        <button class="btn secondary" onclick="showView('view-welcome')">← Back</button>
+      </div>
+    </div>
   </div>
 
   <!-- ============================================== -->
@@ -1200,9 +1221,29 @@ const R32_MATCHES = [
   { id: 'R32-16', label: 'Group K 1st vs Best 3rd (from D/E/I/J/L)',                          team1: { type: 'winner', group: 'K' }, team2: { type: 'third',  pool: ['D','E','I','J','L'] } }
 ];
 
-const R16_PAIRINGS = [['R32-1','R32-2'],['R32-3','R32-4'],['R32-5','R32-6'],['R32-7','R32-8'],['R32-9','R32-10'],['R32-11','R32-12'],['R32-13','R32-14'],['R32-15','R32-16']];
-const QF_PAIRINGS = [['R16-1','R16-2'],['R16-3','R16-4'],['R16-5','R16-6'],['R16-7','R16-8']];
-const SF_PAIRINGS = [['QF-1','QF-2'],['QF-3','QF-4']];
+// Official FIFA 2026 knockout tree (matches 89-104). The previous version paired
+// R32 slots sequentially, which does NOT match the real bracket. Slot ids map to
+// FIFA matches: R16-1..8 = M89..96, QF-1..4 = M97..100, SF-1..2 = M101..102.
+const R16_PAIRINGS = [
+  ['R32-3','R32-6'],   // R16-1  (M89: W74 v W77)
+  ['R32-1','R32-4'],   // R16-2  (M90: W73 v W75)
+  ['R32-2','R32-5'],   // R16-3  (M91: W76 v W78)
+  ['R32-7','R32-8'],   // R16-4  (M92: W79 v W80)
+  ['R32-12','R32-11'], // R16-5  (M93: W83 v W84)
+  ['R32-10','R32-9'],  // R16-6  (M94: W81 v W82)
+  ['R32-15','R32-14'], // R16-7  (M95: W86 v W88)
+  ['R32-13','R32-16']  // R16-8  (M96: W85 v W87)
+];
+const QF_PAIRINGS = [
+  ['R16-1','R16-2'],   // QF-1 (M97:  W89 v W90)
+  ['R16-5','R16-6'],   // QF-2 (M98:  W93 v W94)
+  ['R16-3','R16-4'],   // QF-3 (M99:  W91 v W92)
+  ['R16-7','R16-8']    // QF-4 (M100: W95 v W96)
+];
+const SF_PAIRINGS = [
+  ['QF-1','QF-2'],     // SF-1 (M101: W97 v W98)
+  ['QF-3','QF-4']      // SF-2 (M102: W99 v W100)
+];
 
 /* ==========================================================
    STATE
@@ -1212,6 +1253,8 @@ let isAdmin = false;
 let poolMeta = null;
 let officialResults = {};
 let cachedParticipants = null;
+let resumeDocId = null;   // set when correcting an already-submitted bracket
+let resumeMeta = null;    // preserves submittedAt / paid across a correction
 
 function makeEmptyBracket() {
   return {
@@ -1530,28 +1573,60 @@ function getThirdPlaceOptions(pool) {
 
 // Determine which group's 3rd-place team should slot into each R32 third-place
 // position, following FIFA's rule that each slot can only take a 3rd from
-// specific groups. Returns object mapping R32 match id → group letter (or null
-// if no valid qualifier). Uses greedy assignment: iterate slots in order, for
-// each take the first available qualifying group from its allowed pool.
+// specific groups. Returns object mapping R32 match id → group letter (or null).
+//
+// The previous version used a single greedy pass in slot order, which could
+// strand a constrained team (e.g. a Group K third, eligible for only ONE slot)
+// when an earlier slot grabbed that seat — leaving the team unplaced and a
+// later slot empty. This version assigns the MOST-CONSTRAINED group first
+// (fewest eligible slots) and BACKTRACKS, so it finds a complete valid
+// assignment whenever one exists (which, for any real FIFA combination of 8
+// thirds, it always does).
 function assignThirdPlaceSlots(qualifiers) {
-  // qualifiers: array of group letters (length 0..8) — the user's picks
   const slots = R32_MATCHES.filter(m => m.team2.type === 'third');
-  const assignment = {};
-  const used = new Set();
-  slots.forEach(slot => {
-    // Available = qualifiers in this slot's allowed pool that haven't been
-    // assigned yet. Pick alphabetically first for determinism.
-    const available = slot.team2.pool
-      .filter(g => qualifiers.includes(g) && !used.has(g))
-      .sort();
-    if (available.length > 0) {
-      assignment[slot.id] = available[0];
-      used.add(available[0]);
-    } else {
-      assignment[slot.id] = null;
-    }
+  const result = {};
+  slots.forEach(s => { result[s.id] = null; });
+
+  // De-duplicate the qualifier list defensively.
+  const q = (qualifiers || []).filter((g, i, a) => a.indexOf(g) === i);
+  if (q.length === 0) return result;
+
+  // For each qualifying group, the slot ids whose pool allows it.
+  const slotsForGroup = {};
+  q.forEach(g => {
+    slotsForGroup[g] = slots.filter(s => s.team2.pool.includes(g)).map(s => s.id);
   });
-  return assignment;
+
+  // Most-constrained-first: groups with the fewest eligible slots get placed
+  // earliest so dead-ends surface before easy teams consume scarce seats.
+  const order = [...q].sort((a, b) => slotsForGroup[a].length - slotsForGroup[b].length);
+
+  const usedSlots = new Set();
+  function place(i) {
+    if (i >= order.length) return true;        // every qualifier placed
+    const g = order[i];
+    for (const slotId of slotsForGroup[g]) {
+      if (usedSlots.has(slotId)) continue;
+      usedSlots.add(slotId);
+      result[slotId] = g;
+      if (place(i + 1)) return true;
+      usedSlots.delete(slotId);                // backtrack
+      result[slotId] = null;
+    }
+    return false;                              // no seat works for g here
+  }
+
+  if (!place(0)) {
+    // Fallback (should not occur for valid FIFA combinations): best-effort
+    // greedy so the UI still renders something rather than throwing.
+    usedSlots.clear();
+    slots.forEach(s => { result[s.id] = null; });
+    order.forEach(g => {
+      const slotId = slotsForGroup[g].find(id => !usedSlots.has(id));
+      if (slotId) { usedSlots.add(slotId); result[slotId] = g; }
+    });
+  }
+  return result;
 }
 
 function renderR32() {
@@ -1828,6 +1903,97 @@ function reviewBracket() {
   showView('view-review');
 }
 
+/* ==========================================================
+   RESUME / CORRECTION FLOW
+   Re-derives matchups under the fixed logic and preserves every still-valid
+   pick. Only picks that are no longer possible under the corrected bracket are
+   cleared, so participants re-select a handful of cells instead of redoing
+   anything. Group-stage picks (groups + thirdQualifiers) are never touched.
+   ========================================================== */
+function reconcileSavedBracket() {
+  const cleared = [];
+  const assignment = assignThirdPlaceSlots(currentBracket.thirdQualifiers || []);
+
+  // 1) Revalidate R32 winner picks against the corrected matchups.
+  R32_MATCHES.forEach(m => {
+    const pick = currentBracket.r32[m.id];
+    if (!pick) return;
+    const valid = [];
+    const t1 = getTeamForSource(m.team1);
+    if (t1 && !t1.startsWith('(')) valid.push(t1);
+    if (m.team2.type === 'third') {
+      const g = assignment[m.id];
+      const t2 = g ? currentBracket.groups[g]?.[3] : null;
+      if (t2) valid.push(t2);
+    } else {
+      const t2 = getTeamForSource(m.team2);
+      if (t2 && !t2.startsWith('(')) valid.push(t2);
+    }
+    if (!valid.includes(pick)) { delete currentBracket.r32[m.id]; cleared.push(m.id); }
+  });
+
+  // 2) Propagate to R16/QF/SF/champion. cascadeAfterR32 chains through every
+  //    later round and drops any pick that is no longer one of its two feeders
+  //    under the corrected pairings.
+  const before = JSON.stringify({ r16: currentBracket.r16, qf: currentBracket.qf, sf: currentBracket.sf, champ: currentBracket.champion });
+  cascadeAfterR32();
+  const after = JSON.stringify({ r16: currentBracket.r16, qf: currentBracket.qf, sf: currentBracket.sf, champ: currentBracket.champion });
+  if (before !== after) cleared.push('downstream');
+
+  return cleared;
+}
+
+async function resumeBracket() {
+  const emailInput = document.getElementById('resumeEmail');
+  const errBox = document.getElementById('resumeError');
+  const btn = document.getElementById('resumeBtn');
+  if (errBox) errBox.style.display = 'none';
+
+  const email = (emailInput?.value || '').trim();
+  if (!email) { if (errBox) { errBox.textContent = 'Please enter the email you submitted with.'; errBox.style.display = 'block'; } return; }
+  if (!fbReady()) { if (errBox) { errBox.textContent = 'Pool backend not available. Try again in a moment.'; errBox.style.display = 'block'; } return; }
+
+  btn.disabled = true; btn.textContent = 'Loading...';
+  try {
+    await loadPoolMeta();
+    if (poolMeta && poolMeta.locked) {
+      if (errBox) { errBox.textContent = 'The pool is locked, so corrections are closed. Ask the commissioner to re-open the correction window.'; errBox.style.display = 'block'; }
+      return;
+    }
+
+    const record = await fbFindParticipantByEmail(email);
+    if (!record) { if (errBox) { errBox.textContent = 'No submitted bracket found for that email. Check the spelling.'; errBox.style.display = 'block'; } return; }
+
+    currentBracket = Object.assign(makeEmptyBracket(), record.bracket || {});
+    currentBracket.groups = currentBracket.groups || {};
+    currentBracket.thirdQualifiers = currentBracket.thirdQualifiers || [];
+    currentBracket.r32 = currentBracket.r32 || {};
+    currentBracket.r16 = currentBracket.r16 || {};
+    currentBracket.qf = currentBracket.qf || {};
+    currentBracket.sf = currentBracket.sf || {};
+
+    resumeDocId = record.id;
+    resumeMeta = { submittedAt: record.submittedAt || null, paid: !!record.paid };
+
+    const cleared = reconcileSavedBracket();
+
+    showView('view-bracket');
+    renderGroups(); renderThirds(); renderR32(); renderR16(); renderQF(); renderSF(); renderFinal(); populateChampionDropdown();
+    switchTab('r32');
+
+    if (cleared.length) {
+      alert('Your group-stage picks are unchanged. Because the bracket was corrected, some knockout picks could no longer happen and have been cleared (now shown as empty "-- Pick winner --"). Walk the rounds from Round of 32 onward, fill the blanks, then re-submit to lock in.');
+    } else {
+      alert('Good news: the correction did not invalidate any of your picks. Nothing to change — you can simply re-submit to confirm, or leave it as is.');
+    }
+  } catch (err) {
+    console.error(err);
+    if (errBox) { errBox.textContent = 'Could not load bracket: ' + (err.message || err); errBox.style.display = 'block'; }
+  } finally {
+    btn.disabled = false; btn.textContent = 'Load & Fix My Bracket';
+  }
+}
+
 async function submitBracket() {
   if (!fbReady()) { alert('Backend not configured. Please contact the commissioner.'); return; }
 
@@ -1844,27 +2010,32 @@ async function submitBracket() {
       return;
     }
 
-    // Re-check email isn't already used (race condition guard)
-    const emailExists = await fbCheckEmailExists(currentBracket.email);
-    if (emailExists) {
-      alert(`A bracket has already been submitted from ${currentBracket.email}. Only one bracket per person.`);
-      btn.disabled = false;
-      btn.textContent = 'Submit Bracket & Lock In';
-      return;
+    // Re-check email isn't already used (race condition guard) — but NOT when
+    // we're overwriting the user's own bracket via the correction flow.
+    if (!resumeDocId) {
+      const emailExists = await fbCheckEmailExists(currentBracket.email);
+      if (emailExists) {
+        alert(`A bracket has already been submitted from ${currentBracket.email}. Only one bracket per person. Use "Fix / Resume My Bracket" if you need to update it.`);
+        btn.disabled = false;
+        btn.textContent = 'Submit Bracket & Lock In';
+        return;
+      }
     }
 
-    const id = 'p_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+    const id = resumeDocId || ('p_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9));
     const record = {
       id,
       name: currentBracket.name,
       email: currentBracket.email,
       emailLower: currentBracket.email.toLowerCase().trim(),
-      submittedAt: new Date().toISOString(),
-      paid: false,
+      submittedAt: (resumeMeta && resumeMeta.submittedAt) ? resumeMeta.submittedAt : new Date().toISOString(),
+      paid: resumeMeta ? resumeMeta.paid : false,
       bracket: currentBracket
     };
+    if (resumeDocId) record.correctedAt = new Date().toISOString();
 
     await fbSetDoc('participants/' + id, record);
+    resumeDocId = null; resumeMeta = null;  // clear correction state after save
 
     document.getElementById('confirmPlayerName').textContent = `Confirmed: ${currentBracket.name} · ID #${id.slice(-6).toUpperCase()}`;
     showView('view-confirm');
@@ -2175,9 +2346,12 @@ async function renderAdminResultsForm() {
       const id = `${round}-${i}`;
       const key = round.toLowerCase();
       const r = officialResults[key]?.[id] || '';
+      const pair = round === 'R16' ? R16_PAIRINGS[i - 1] : round === 'QF' ? QF_PAIRINGS[i - 1] : SF_PAIRINGS[i - 1];
+      const lbl = pair ? `winner ${pair[0]} vs winner ${pair[1]}` : '';
       html += `
         <div class="matchup">
           <div class="matchup-id">${id}</div>
+          <div class="matchup-teams" style="font-size:12px;color:rgba(10,26,20,0.6);">${lbl}</div>
           <select onchange="setActualKO('${key}', '${id}', this.value)">
             <option value="">-- winner --</option>
             ${ALL_TEAMS.map(t => `<option value="${escapeAttr(t)}" ${r === t ? 'selected' : ''}>${t}</option>`).join('')}
@@ -2550,6 +2724,7 @@ window.setActualGoldenBoot = setActualGoldenBoot;
 window.setActualFinalScore = setActualFinalScore;
 window.resetForm = resetForm;
 window.lookupMyBracket = lookupMyBracket;
+window.resumeBracket = resumeBracket;
 window.resetMyBracketLookup = resetMyBracketLookup;
 window.viewParticipantBracket = viewParticipantBracket;
 window.closeBracketModal = closeBracketModal;
