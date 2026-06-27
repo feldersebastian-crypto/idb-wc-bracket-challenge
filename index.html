@@ -2764,9 +2764,52 @@ async function togglePoolLock() {
   await loadAdminPanel();
 }
 
-async function renderAdminResultsForm() {
+// Helper for the admin form: for a given knockout slot, return the actual
+// matchup label and the two possible winner teams, based on results already
+// entered above (group winners/runners-up/3rd-place actuals → R32 cards;
+// R32 winners → R16 cards; etc.). Slots without enough upstream data fall
+// back to abstract placeholder labels in parentheses.
+function adminKnockoutCell(round, id) {
+  if (round === 'r32') {
+    const m = R32_MATCHES.find(x => x.id === id);
+    if (!m) return { label: '', possibles: [], slotRef: id };
+    let t1, t2, t2Suffix = '';
+    if (m.team1.type === 'winner') t1 = officialResults.groups?.[m.team1.group]?.[1] || `(Group ${m.team1.group} 1st)`;
+    else if (m.team1.type === 'runner') t1 = officialResults.groups?.[m.team1.group]?.[2] || `(Group ${m.team1.group} 2nd)`;
+    if (m.team2.type === 'winner') t2 = officialResults.groups?.[m.team2.group]?.[1] || `(Group ${m.team2.group} 1st)`;
+    else if (m.team2.type === 'runner') t2 = officialResults.groups?.[m.team2.group]?.[2] || `(Group ${m.team2.group} 2nd)`;
+    else if (m.team2.type === 'third') {
+      // Look up which group's 3rd-place team slots in here based on which 8
+      // qualifiers the commissioner has ticked. Uses the same FIFA Annex C
+      // assignment table the participant side uses, so the matchup is exact.
+      const qualifiers = officialResults.thirdQualifierGroups || [];
+      const assignment = assignThirdPlaceSlots(qualifiers);
+      const g = assignment[m.id];
+      if (g) {
+        t2 = officialResults.groups?.[g]?.[3] || `(Group ${g} 3rd)`;
+        t2Suffix = ` (${g}-3)`;
+      } else {
+        t2 = `(3rd from ${m.team2.pool.join('/')})`;
+      }
+    }
+    const possibles = [t1, t2].filter(t => t && !t.startsWith('('));
+    return { label: `${t1} vs ${t2}${t2Suffix}`, possibles, slotRef: m.label };
+  }
+  // R16 / QF / SF — each slot feeds from two previous-round winners.
+  const pairings = round === 'r16' ? R16_PAIRINGS : round === 'qf' ? QF_PAIRINGS : SF_PAIRINGS;
+  const prevKey = round === 'r16' ? 'r32' : round === 'qf' ? 'r16' : 'qf';
+  const idx = parseInt(id.split('-')[1]) - 1;
+  const pair = pairings[idx];
+  if (!pair) return { label: '', possibles: [], slotRef: id };
+  const t1 = officialResults[prevKey]?.[pair[0]] || `(winner of ${pair[0]})`;
+  const t2 = officialResults[prevKey]?.[pair[1]] || `(winner of ${pair[1]})`;
+  const possibles = [t1, t2].filter(t => t && !t.startsWith('('));
+  return { label: `${t1} vs ${t2}`, possibles, slotRef: `winner ${pair[0]} vs winner ${pair[1]}` };
+}
+
+async function renderAdminResultsForm(skipReload) {
   const c = document.getElementById('adminResultsForm');
-  await loadResults();
+  if (!skipReload) await loadResults();
 
   let html = '<div class="round-header">Group Stage Actuals <span class="pts-tag">12 groups</span></div><div class="groups-grid">';
   GROUP_LETTERS.forEach(g => {
@@ -2813,16 +2856,22 @@ async function renderAdminResultsForm() {
   });
   html += '</div></div>';
 
-  html += '<div class="round-header" style="margin-top:32px;">Round of 32 Actuals</div><div class="matchup-grid">';
+  html += '<div class="round-header" style="margin-top:32px;">Round of 32 Actuals <span class="pts-tag">2 pts each</span></div><div class="matchup-grid">';
   R32_MATCHES.forEach(m => {
     const r = officialResults.r32?.[m.id] || '';
+    const { label, possibles, slotRef } = adminKnockoutCell('r32', m.id);
+    // Build dropdown options: prefer the two derived teams; if the saved value
+    // isn't one of them (e.g., admin changed an upstream pick later), keep it
+    // listed so the dropdown still shows what was previously saved.
+    const opts = [...possibles];
+    if (r && !opts.includes(r)) opts.push(r);
     html += `
       <div class="matchup">
-        <div class="matchup-id">${m.id}</div>
-        <div class="matchup-teams">${m.label}</div>
+        <div class="matchup-id">${m.id} · ${escapeHtml(slotRef)}</div>
+        <div class="matchup-teams"><strong>${escapeHtml(label)}</strong></div>
         <select onchange="setActualR32('${m.id}', this.value)">
           <option value="">-- winner --</option>
-          ${ALL_TEAMS.map(t => `<option value="${escapeAttr(t)}" ${r === t ? 'selected' : ''}>${t}</option>`).join('')}
+          ${opts.map(t => `<option value="${escapeAttr(t)}" ${r === t ? 'selected' : ''}>${escapeHtml(t)}</option>`).join('')}
         </select>
       </div>
     `;
@@ -2832,20 +2881,21 @@ async function renderAdminResultsForm() {
   ['R16', 'QF', 'SF'].forEach(round => {
     const count = round === 'R16' ? 8 : round === 'QF' ? 4 : 2;
     const ptsTag = round === 'R16' ? '4 pts each' : round === 'QF' ? '8 pts each' : '16 pts each';
+    const key = round.toLowerCase();
     html += `<div class="round-header" style="margin-top:32px;">${round} Actuals <span class="pts-tag">${ptsTag}</span></div><div class="matchup-grid">`;
     for (let i = 1; i <= count; i++) {
       const id = `${round}-${i}`;
-      const key = round.toLowerCase();
       const r = officialResults[key]?.[id] || '';
-      const pair = round === 'R16' ? R16_PAIRINGS[i - 1] : round === 'QF' ? QF_PAIRINGS[i - 1] : SF_PAIRINGS[i - 1];
-      const lbl = pair ? `winner ${pair[0]} vs winner ${pair[1]}` : '';
+      const { label, possibles, slotRef } = adminKnockoutCell(key, id);
+      const opts = [...possibles];
+      if (r && !opts.includes(r)) opts.push(r);
       html += `
         <div class="matchup">
-          <div class="matchup-id">${id}</div>
-          <div class="matchup-teams" style="font-size:12px;color:rgba(10,26,20,0.6);">${lbl}</div>
+          <div class="matchup-id">${id} · ${escapeHtml(slotRef)}</div>
+          <div class="matchup-teams"><strong>${escapeHtml(label)}</strong></div>
           <select onchange="setActualKO('${key}', '${id}', this.value)">
             <option value="">-- winner --</option>
-            ${ALL_TEAMS.map(t => `<option value="${escapeAttr(t)}" ${r === t ? 'selected' : ''}>${t}</option>`).join('')}
+            ${opts.map(t => `<option value="${escapeAttr(t)}" ${r === t ? 'selected' : ''}>${escapeHtml(t)}</option>`).join('')}
           </select>
         </div>
       `;
@@ -2853,13 +2903,24 @@ async function renderAdminResultsForm() {
     html += '</div>';
   });
 
+  // Champion dropdown: only the two semifinal winners (plus the saved value, if any).
+  const champPossibles = [];
+  if (officialResults.sf?.['SF-1']) champPossibles.push(officialResults.sf['SF-1']);
+  if (officialResults.sf?.['SF-2']) champPossibles.push(officialResults.sf['SF-2']);
+  const champOpts = [...champPossibles];
+  if (officialResults.champion && !champOpts.includes(officialResults.champion)) champOpts.push(officialResults.champion);
+  const champLabel = (officialResults.sf?.['SF-1'] && officialResults.sf?.['SF-2'])
+    ? `${officialResults.sf['SF-1']} vs ${officialResults.sf['SF-2']}`
+    : '(enter both semifinal winners above to populate)';
+
   html += `
     <div class="round-header" style="margin-top:32px;">Final &amp; Tiebreakers</div>
     <div class="card" style="margin-top:0;">
+      <div style="margin-bottom:8px; font-size:13px; color:rgba(10,26,20,0.65);"><em>${escapeHtml(champLabel)}</em></div>
       <label>Champion (32 pts)</label>
       <select onchange="setActualChampion(this.value)">
         <option value="">--</option>
-        ${ALL_TEAMS.map(t => `<option value="${escapeAttr(t)}" ${officialResults.champion === t ? 'selected' : ''}>${t}</option>`).join('')}
+        ${champOpts.map(t => `<option value="${escapeAttr(t)}" ${officialResults.champion === t ? 'selected' : ''}>${escapeHtml(t)}</option>`).join('')}
       </select>
       <div class="form-row" style="margin-top:18px;">
         <div>
@@ -2886,7 +2947,13 @@ function setActualGroup(g, place, team) {
   officialResults.groups[g] = officialResults.groups[g] || {};
   if (team) officialResults.groups[g][place] = team;
   else delete officialResults.groups[g][place];
-  recomputeThirdQualified();
+  // Keep the denormalized list of advancing 3rd-place teams in sync with the
+  // commissioner's picks (the old recomputeThirdQualified helper was removed,
+  // so we inline its logic here).
+  const list = officialResults.thirdQualifierGroups || [];
+  officialResults.thirdQualified = list.map(gg => officialResults.groups?.[gg]?.[3]).filter(Boolean);
+  // Cascade the new labels into R32 matchups and the 3rd-place qualifier card.
+  renderAdminResultsForm(true);
 }
 
 function toggleAdminThird(g, checked) {
@@ -2897,21 +2964,26 @@ function toggleAdminThird(g, checked) {
     list = list.filter(x => x !== g);
   }
   officialResults.thirdQualifierGroups = list;
-  // Also store the actual teams (for scoring lookup)
   officialResults.thirdQualified = list.map(gg => officialResults.groups?.[gg]?.[3]).filter(Boolean);
-  // Re-render the admin form to update count + disabled state
-  renderAdminResultsForm();
+  // Re-render the admin form WITHOUT reloading from Firestore (otherwise the
+  // un-saved local toggle would be overwritten by the stale server copy).
+  renderAdminResultsForm(true);
 }
 
 function setActualR32(id, team) {
   officialResults.r32 = officialResults.r32 || {};
   if (team) officialResults.r32[id] = team;
   else delete officialResults.r32[id];
+  // Cascade into R16 matchup labels.
+  renderAdminResultsForm(true);
 }
 function setActualKO(round, id, team) {
   officialResults[round] = officialResults[round] || {};
   if (team) officialResults[round][id] = team;
   else delete officialResults[round][id];
+  // Cascade into the next round's matchup labels (and the Champion dropdown if
+  // this is an SF pick).
+  renderAdminResultsForm(true);
 }
 function setActualChampion(team) { officialResults.champion = team || ''; }
 function setActualGoldenBoot(name) { officialResults.goldenBoot = name; }
