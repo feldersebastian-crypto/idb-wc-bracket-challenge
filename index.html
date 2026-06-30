@@ -680,6 +680,327 @@
     padding: 6px 10px;
   }
   .modal-close:hover { color: var(--ink); }
+
+  /* ==========================================================
+     BRACKET TREE VIEW (used in "View My Bracket")
+     ========================================================== */
+  .bracket-view-meta {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+  }
+  .bracket-view-meta h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 26px;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+  }
+  .bracket-view-meta .submeta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: rgba(10, 26, 20, 0.6);
+  }
+
+  .breakdown {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 0;
+    margin: 0 0 24px;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .breakdown .b-cell {
+    padding: 14px 12px;
+    border-right: 1px solid var(--line);
+    text-align: center;
+  }
+  .breakdown .b-cell:last-child { border-right: none; }
+  .breakdown .b-cell.total {
+    background: rgba(20, 54, 31, 0.08);
+  }
+  .b-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 26px;
+    line-height: 1;
+    color: var(--pitch);
+  }
+  .b-num.gold { color: var(--gold); }
+  .b-num.dim { color: rgba(10, 26, 20, 0.55); }
+  .b-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(10, 26, 20, 0.6);
+    margin-top: 6px;
+  }
+  .b-denom {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(10, 26, 20, 0.4);
+  }
+
+  .group-readonly-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 12px 0 24px;
+  }
+  .group-readonly {
+    border: 1px solid var(--line);
+    background: rgba(255, 252, 245, 0.5);
+    padding: 12px 14px;
+  }
+  .group-readonly h4 {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 16px;
+    margin: 0 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .group-readonly h4 .mini {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: rgba(10, 26, 20, 0.5);
+    font-weight: 400;
+  }
+  .gr-row {
+    display: grid;
+    grid-template-columns: 16px 1fr auto;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 12px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .gr-row:last-child { border-bottom: none; }
+  .gr-row .place {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(10, 26, 20, 0.55);
+  }
+  .gr-row.correct { background: rgba(20, 54, 31, 0.06); }
+  .gr-row.wrong { background: rgba(161, 53, 38, 0.05); }
+  .gr-row .pick {
+    font-weight: 500;
+  }
+  .gr-row.wrong .pick { text-decoration: line-through; color: rgba(10, 26, 20, 0.45); }
+  .gr-row .icon {
+    font-size: 12px;
+    line-height: 1;
+  }
+  .gr-row.correct .icon { color: var(--pitch); }
+  .gr-row.wrong .icon { color: var(--red); }
+  .gr-row.pending .icon { color: rgba(10, 26, 20, 0.3); }
+  .gr-row .actual-text {
+    font-size: 11px;
+    font-style: italic;
+    color: var(--pitch);
+    grid-column: 2 / 4;
+    margin-top: -2px;
+    padding-left: 0;
+  }
+
+  /* Tree bracket — breaks out of the card padding for full horizontal scroll */
+  .bracket-tree-wrapper {
+    margin: 24px -32px 24px;
+    padding: 8px 16px 24px;
+    overflow-x: auto;
+    background: rgba(20, 54, 31, 0.02);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .bracket-tree-wrapper::-webkit-scrollbar { height: 8px; }
+  .bracket-tree-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(10, 26, 20, 0.25); border-radius: 4px;
+  }
+  .scroll-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(10, 26, 20, 0.45);
+    text-align: center;
+    margin: 0 0 10px;
+  }
+  .bracket-tree {
+    display: flex;
+    gap: 18px;
+    min-width: 1100px;
+    padding: 16px 0;
+    align-items: stretch;
+  }
+  .bracket-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-width: 180px;
+    flex: 1;
+    position: relative;
+  }
+  .bracket-col-r32 { min-width: 200px; }
+  .bracket-col-r16 { min-width: 190px; }
+  .bracket-col-qf { min-width: 180px; }
+  .bracket-col-sf { min-width: 180px; }
+  .bracket-col-final { min-width: 200px; justify-content: center; }
+  .bracket-col-label {
+    position: sticky;
+    top: 0;
+    background: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(10, 26, 20, 0.6);
+    text-align: center;
+    padding: 6px 0 8px;
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+  .bracket-cell {
+    background: rgba(255, 252, 245, 0.85);
+    border: 1px solid var(--line-strong);
+    padding: 8px 10px;
+    font-size: 12px;
+    position: relative;
+    margin: 4px 0;
+    border-radius: 0;
+  }
+  .bracket-cell.correct {
+    border-color: var(--pitch);
+    background: rgba(20, 54, 31, 0.10);
+  }
+  .bracket-cell.wrong {
+    border-color: var(--red);
+    background: rgba(161, 53, 38, 0.07);
+  }
+  .bracket-cell.pending {
+    border-color: var(--line-strong);
+  }
+  .bracket-cell.final-cell {
+    background: linear-gradient(135deg, var(--pitch) 0%, var(--pitch-deep) 100%);
+    color: var(--paper);
+    border-color: var(--ink);
+    padding: 14px 14px;
+  }
+  .bracket-cell.final-cell.correct {
+    background: linear-gradient(135deg, var(--pitch) 0%, var(--pitch-deep) 100%);
+    box-shadow: 0 0 0 2px var(--gold);
+  }
+  .bracket-cell.final-cell.wrong {
+    background: linear-gradient(135deg, var(--red) 0%, #6e2218 100%);
+    color: var(--paper);
+  }
+  .bc-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(10, 26, 20, 0.5);
+    margin-bottom: 6px;
+  }
+  .bracket-cell.final-cell .bc-head { color: rgba(244, 239, 230, 0.7); }
+  .bc-status {
+    font-size: 14px;
+    line-height: 1;
+    font-family: 'Inter', sans-serif;
+  }
+  .bc-status.correct { color: var(--pitch); }
+  .bc-status.wrong { color: var(--red); }
+  .bc-status.pending { color: rgba(10, 26, 20, 0.3); }
+  .bracket-cell.final-cell .bc-status.correct { color: var(--gold); }
+  .bracket-cell.final-cell .bc-status.wrong,
+  .bracket-cell.final-cell .bc-status.pending { color: var(--paper); }
+  .bc-teams {
+    font-size: 10px;
+    color: rgba(10, 26, 20, 0.55);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+  .bracket-cell.final-cell .bc-teams { color: rgba(244, 239, 230, 0.7); }
+  .bc-pick {
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.25;
+  }
+  .bc-pick.wrong {
+    text-decoration: line-through;
+    text-decoration-color: rgba(161, 53, 38, 0.55);
+    color: rgba(10, 26, 20, 0.45);
+  }
+  .bracket-cell.final-cell .bc-pick {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--gold);
+  }
+  .bracket-cell.final-cell.wrong .bc-pick {
+    text-decoration: line-through;
+    color: rgba(244, 239, 230, 0.7);
+  }
+  .bc-actual {
+    font-size: 11px;
+    font-style: italic;
+    color: var(--pitch);
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .bc-actual::before {
+    content: '→';
+    font-style: normal;
+    color: rgba(10, 26, 20, 0.4);
+  }
+  .bracket-cell.final-cell .bc-actual { color: var(--paper); }
+  .bracket-cell.final-cell .bc-actual::before { color: rgba(244, 239, 230, 0.5); }
+
+  /* Tiebreaker row at the bottom of bracket view */
+  .tiebreaker-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  @media (max-width: 640px) { .tiebreaker-strip { grid-template-columns: 1fr; } }
+  .tb-card {
+    border: 1px solid var(--line-strong);
+    padding: 14px 16px;
+    background: rgba(255, 252, 245, 0.5);
+  }
+  .tb-card.correct { border-color: var(--pitch); background: rgba(20, 54, 31, 0.07); }
+  .tb-card.wrong { border-color: var(--red); background: rgba(161, 53, 38, 0.05); }
+  .tb-card .tb-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(10, 26, 20, 0.6);
+    margin-bottom: 6px;
+  }
+  .tb-card .tb-pick {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .tb-card.wrong .tb-pick { text-decoration: line-through; color: rgba(10, 26, 20, 0.5); }
+  .tb-card .tb-actual {
+    margin-top: 4px;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--pitch);
+  }
 </style>
 </head>
 <body>
@@ -3159,6 +3480,447 @@ function renderBracketReadOnly(record) {
 }
 
 /* ==========================================================
+   BRACKET TREE VIEW (used by "View My Bracket")
+   Renders a left-to-right tree of every knockout matchup with the user's
+   pick and (where results are entered) the actual result + ✓/✗ indicators.
+   ========================================================== */
+
+// Generic matchup-team resolver. Takes one set of source data (either the
+// user's bracket OR the official results) and returns { team1, team2 } for
+// the requested knockout match. Lets us compute "user's predicted matchup"
+// and "actual matchup" with the same code.
+function getMatchupTeamsGeneric(matchId, src) {
+  if (matchId.startsWith('R32-')) {
+    const m = R32_MATCHES.find(x => x.id === matchId);
+    if (!m) return { team1: null, team2: null };
+    let team1, team2;
+    const groups = src.groups || {};
+    if (m.team1.type === 'winner') team1 = groups[m.team1.group]?.[1];
+    else if (m.team1.type === 'runner') team1 = groups[m.team1.group]?.[2];
+    if (m.team2.type === 'winner') team2 = groups[m.team2.group]?.[1];
+    else if (m.team2.type === 'runner') team2 = groups[m.team2.group]?.[2];
+    else if (m.team2.type === 'third') {
+      const assignment = assignThirdPlaceSlots(src.thirdQualifiers || []);
+      const g = assignment[m.id];
+      if (g) team2 = groups[g]?.[3];
+    }
+    return { team1: team1 || null, team2: team2 || null };
+  }
+  if (matchId.startsWith('R16-')) {
+    const idx = parseInt(matchId.split('-')[1]) - 1;
+    const pair = R16_PAIRINGS[idx];
+    const r32 = src.r32 || {};
+    return { team1: r32[pair[0]] || null, team2: r32[pair[1]] || null };
+  }
+  if (matchId.startsWith('QF-')) {
+    const idx = parseInt(matchId.split('-')[1]) - 1;
+    const pair = QF_PAIRINGS[idx];
+    const r16 = src.r16 || {};
+    return { team1: r16[pair[0]] || null, team2: r16[pair[1]] || null };
+  }
+  if (matchId.startsWith('SF-')) {
+    const idx = parseInt(matchId.split('-')[1]) - 1;
+    const pair = SF_PAIRINGS[idx];
+    const qf = src.qf || {};
+    return { team1: qf[pair[0]] || null, team2: qf[pair[1]] || null };
+  }
+  return { team1: null, team2: null };
+}
+
+// Computes the set of teams still alive in the tournament, based on the
+// official results entered so far. Used to determine "max possible
+// remaining" for the user's bracket and to mark picks as already lost
+// when their team has been eliminated.
+function computeAliveTeams(results) {
+  const alive = new Set(ALL_TEAMS);
+
+  // Group stage: if all three placements for a group are known, the 4th
+  // (un-placed) team is out.
+  GROUP_LETTERS.forEach(g => {
+    const placements = results?.groups?.[g];
+    if (!placements) return;
+    const placed = [placements[1], placements[2], placements[3]].filter(Boolean);
+    if (placed.length === 3) {
+      const placedSet = new Set(placed);
+      GROUPS[g].teams.forEach(t => { if (!placedSet.has(t)) alive.delete(t); });
+    }
+  });
+
+  // 3rd-place qualifiers locked in: 3rd-place teams from non-selected
+  // groups are eliminated.
+  const qg = results?.thirdQualifierGroups || [];
+  if (qg.length === 8) {
+    GROUP_LETTERS.forEach(g => {
+      if (!qg.includes(g)) {
+        const third = results?.groups?.[g]?.[3];
+        if (third) alive.delete(third);
+      }
+    });
+  }
+
+  // Knockout rounds — for each match with a recorded winner, drop the
+  // loser. The loser is whichever team in the actual matchup isn't the
+  // winner; if the matchup teams can't be resolved yet (rare), we skip.
+  const src = {
+    groups: results?.groups,
+    thirdQualifiers: results?.thirdQualifierGroups,
+    r32: results?.r32, r16: results?.r16, qf: results?.qf, sf: results?.sf
+  };
+  const knockoutRounds = [
+    { key: 'r32', ids: R32_MATCHES.map(m => m.id) },
+    { key: 'r16', ids: R16_PAIRINGS.map((_, i) => `R16-${i + 1}`) },
+    { key: 'qf',  ids: QF_PAIRINGS.map((_, i) => `QF-${i + 1}`) },
+    { key: 'sf',  ids: SF_PAIRINGS.map((_, i) => `SF-${i + 1}`) }
+  ];
+  knockoutRounds.forEach(({ key, ids }) => {
+    ids.forEach(id => {
+      const winner = results?.[key]?.[id];
+      if (!winner) return;
+      const { team1, team2 } = getMatchupTeamsGeneric(id, src);
+      if (team1 && team1 !== winner) alive.delete(team1);
+      if (team2 && team2 !== winner) alive.delete(team2);
+    });
+  });
+
+  // Final: the runner-up (whichever SF winner isn't the champion) is out.
+  if (results?.champion) {
+    ['SF-1', 'SF-2'].forEach(sfId => {
+      const sfWinner = results?.sf?.[sfId];
+      if (sfWinner && sfWinner !== results.champion) alive.delete(sfWinner);
+    });
+  }
+
+  return alive;
+}
+
+// Per-round point breakdown: earned (already locked in), remaining (still
+// possible because the pick team is alive and the result isn't entered),
+// and lost (deliberately not surfaced but used for max-possible math).
+function computeBracketScoringBreakdown(bracket, results, alive) {
+  const sections = [];
+  let totalEarned = 0, totalRemaining = 0;
+
+  // Group stage (1 pt per correct 1st/2nd, 1 pt per correct 3rd-qualifier pick)
+  let gsE = 0, gsR = 0;
+  const thirdsLocked = (results?.thirdQualifierGroups || []).length === 8;
+  GROUP_LETTERS.forEach(g => {
+    const p = bracket.groups?.[g] || {};
+    const a = results?.groups?.[g] || {};
+    [1, 2].forEach(place => {
+      if (!p[place]) return;
+      if (a[place]) {
+        if (p[place] === a[place]) gsE += 1;
+      } else if (alive.has(p[place])) {
+        gsR += 1;
+      }
+    });
+    if (p[3]) {
+      if (thirdsLocked) {
+        if (results.thirdQualified?.includes(p[3])) gsE += 1;
+      } else if (alive.has(p[3])) {
+        gsR += 1;
+      }
+    }
+  });
+  sections.push({ key: 'gs', name: 'Group Stage', earned: gsE, remaining: gsR });
+  totalEarned += gsE; totalRemaining += gsR;
+
+  // Knockout rounds
+  const koRounds = [
+    { key: 'r32', name: 'Round of 32', pts: 2, ids: R32_MATCHES.map(m => m.id) },
+    { key: 'r16', name: 'Round of 16', pts: 4, ids: R16_PAIRINGS.map((_, i) => `R16-${i + 1}`) },
+    { key: 'qf',  name: 'Quarterfinals', pts: 8, ids: QF_PAIRINGS.map((_, i) => `QF-${i + 1}`) },
+    { key: 'sf',  name: 'Semifinals', pts: 16, ids: SF_PAIRINGS.map((_, i) => `SF-${i + 1}`) }
+  ];
+  koRounds.forEach(({ key, name, pts, ids }) => {
+    let e = 0, r = 0;
+    ids.forEach(id => {
+      const pick = bracket[key]?.[id];
+      const actual = results?.[key]?.[id];
+      if (!pick) return;
+      if (actual) {
+        if (pick === actual) e += pts;
+      } else if (alive.has(pick)) {
+        r += pts;
+      }
+    });
+    sections.push({ key, name, earned: e, remaining: r });
+    totalEarned += e; totalRemaining += r;
+  });
+
+  // Final / Champion (32 pts)
+  let chE = 0, chR = 0;
+  const champPick = bracket.champion;
+  const champActual = results?.champion;
+  if (champPick) {
+    if (champActual) { if (champPick === champActual) chE += 32; }
+    else if (alive.has(champPick)) chR += 32;
+  }
+  sections.push({ key: 'final', name: 'Champion', earned: chE, remaining: chR });
+  totalEarned += chE; totalRemaining += chR;
+
+  // Bonuses: Golden Boot (5) + exact final score (10) / margin (3)
+  let bE = 0, bR = 0;
+  if (bracket.goldenBoot) {
+    if (results?.goldenBoot) {
+      if (bracket.goldenBoot.toLowerCase().trim() === results.goldenBoot.toLowerCase().trim()) bE += 5;
+    } else {
+      bR += 5;
+    }
+  }
+  if (bracket.finalScoreA != null && bracket.finalScoreB != null) {
+    if (results?.finalScoreA != null && results?.finalScoreB != null) {
+      if (bracket.finalScoreA === results.finalScoreA && bracket.finalScoreB === results.finalScoreB) bE += 10;
+      else if ((bracket.finalScoreA - bracket.finalScoreB) === (results.finalScoreA - results.finalScoreB)) bE += 3;
+    } else {
+      // Could still earn 10 (exact) — count the max possible as remaining
+      bR += 10;
+    }
+  }
+  sections.push({ key: 'bonus', name: 'Bonus', earned: bE, remaining: bR });
+  totalEarned += bE; totalRemaining += bR;
+
+  return { sections, total: { earned: totalEarned, remaining: totalRemaining } };
+}
+
+// Renders a single knockout cell with status coloring.
+function renderTreeCell(round, matchId, bracket, results, alive) {
+  const userSrc = {
+    groups: bracket.groups, thirdQualifiers: bracket.thirdQualifiers,
+    r32: bracket.r32, r16: bracket.r16, qf: bracket.qf, sf: bracket.sf
+  };
+  const actualSrc = {
+    groups: results?.groups, thirdQualifiers: results?.thirdQualifierGroups,
+    r32: results?.r32, r16: results?.r16, qf: results?.qf, sf: results?.sf
+  };
+  const userMatch = getMatchupTeamsGeneric(matchId, userSrc);
+  const actualMatch = getMatchupTeamsGeneric(matchId, actualSrc);
+
+  const userPick = bracket[round]?.[matchId];
+  const actualWinner = results?.[round]?.[matchId];
+
+  let status = 'pending', icon = '○';
+  if (actualWinner) {
+    if (userPick && userPick === actualWinner) { status = 'correct'; icon = '✓'; }
+    else { status = 'wrong'; icon = '✗'; }
+  } else if (userPick && !alive.has(userPick)) {
+    status = 'wrong'; icon = '✗';
+  }
+
+  const userTeamsLine = `${userMatch.team1 || '—'} vs ${userMatch.team2 || '—'}`;
+  const actualMatchKnown = actualMatch.team1 && actualMatch.team2;
+  const matchupDiffers = actualMatchKnown &&
+    (actualMatch.team1 !== userMatch.team1 || actualMatch.team2 !== userMatch.team2);
+
+  let html = `<div class="bracket-cell ${status}">`;
+  html += `<div class="bc-head"><span>${matchId}</span><span class="bc-status ${status}">${icon}</span></div>`;
+  html += `<div class="bc-teams">${escapeHtml(userTeamsLine)}</div>`;
+  html += `<div class="bc-pick ${status === 'wrong' ? 'wrong' : ''}">${escapeHtml(userPick || '— No pick —')}</div>`;
+  if (actualWinner && actualWinner !== userPick) {
+    html += `<div class="bc-actual">${escapeHtml(actualWinner)}</div>`;
+  } else if (!actualWinner && matchupDiffers) {
+    // Result isn't in yet but the actual matchup is different from what the
+    // user predicted (their assumed team didn't make it to this matchup).
+    html += `<div class="bc-actual">Actual matchup: ${escapeHtml(actualMatch.team1)} vs ${escapeHtml(actualMatch.team2)}</div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+// Renders the Final cell (slightly bigger, gold-accented).
+function renderTreeFinal(bracket, results, alive) {
+  const userT1 = bracket.sf?.['SF-1'];
+  const userT2 = bracket.sf?.['SF-2'];
+  const actualT1 = results?.sf?.['SF-1'];
+  const actualT2 = results?.sf?.['SF-2'];
+  const userChamp = bracket.champion;
+  const actualChamp = results?.champion;
+
+  let status = 'pending', icon = '○';
+  if (actualChamp) {
+    if (userChamp && userChamp === actualChamp) { status = 'correct'; icon = '🏆'; }
+    else { status = 'wrong'; icon = '✗'; }
+  } else if (userChamp && !alive.has(userChamp)) {
+    status = 'wrong'; icon = '✗';
+  }
+
+  const userFinalLine = `${userT1 || '—'} vs ${userT2 || '—'}`;
+  const actualFinalLine = (actualT1 && actualT2) ? `${actualT1} vs ${actualT2}` : null;
+
+  let html = `<div class="bracket-cell final-cell ${status}">`;
+  html += `<div class="bc-head"><span>FINAL · CHAMPION</span><span class="bc-status ${status}">${icon}</span></div>`;
+  html += `<div class="bc-teams">${escapeHtml(userFinalLine)}</div>`;
+  html += `<div class="bc-pick ${status === 'wrong' ? 'wrong' : ''}">${escapeHtml(userChamp || '— No pick —')}</div>`;
+  if (actualChamp && actualChamp !== userChamp) {
+    html += `<div class="bc-actual">${escapeHtml(actualChamp)}</div>`;
+  } else if (!actualChamp && actualFinalLine && actualFinalLine !== userFinalLine) {
+    html += `<div class="bc-actual">Actual final: ${escapeHtml(actualFinalLine)}</div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+// Renders the score breakdown strip at the top.
+function renderScoreBreakdown(breakdown) {
+  const t = breakdown.total;
+  let html = '<div class="breakdown">';
+  html += `<div class="b-cell total"><div class="b-num gold">${t.earned}</div><div class="b-lbl">Score</div></div>`;
+  breakdown.sections.forEach(s => {
+    html += `<div class="b-cell"><div class="b-num">${s.earned}</div><div class="b-lbl">${escapeHtml(s.name)}</div></div>`;
+  });
+  html += `<div class="b-cell"><div class="b-num dim">${t.remaining}</div><div class="b-lbl">Max Remaining</div></div>`;
+  html += '</div>';
+  return html;
+}
+
+// Renders the compact group-stage read-only grid (above the tree).
+function renderGroupStageReadOnly(bracket, results) {
+  let html = '<h3 style="font-family:\'Fraunces\',serif;font-weight:800;font-size:18px;margin:24px 0 4px;">Group Stage Picks</h3>';
+  html += '<div class="group-readonly-grid">';
+  const thirdsLocked = (results?.thirdQualifierGroups || []).length === 8;
+  GROUP_LETTERS.forEach(g => {
+    const p = bracket.groups?.[g] || {};
+    const a = results?.groups?.[g] || {};
+    html += `<div class="group-readonly"><h4>Group ${g} <span class="mini">1 / 2 / 3</span></h4>`;
+    [1, 2, 3].forEach(place => {
+      const pick = p[place];
+      let rowClass = 'pending', iconChar = '○';
+      let showActual = null;
+      if (place === 3) {
+        if (thirdsLocked) {
+          if (pick && results.thirdQualified?.includes(pick)) { rowClass = 'correct'; iconChar = '✓'; }
+          else if (pick) {
+            rowClass = 'wrong'; iconChar = '✗';
+            // Show which team in this group actually qualified, if any
+            if (a[3] && results.thirdQualifierGroups?.includes(g)) showActual = a[3];
+          }
+        }
+      } else {
+        if (a[place]) {
+          if (pick === a[place]) { rowClass = 'correct'; iconChar = '✓'; }
+          else if (pick) { rowClass = 'wrong'; iconChar = '✗'; showActual = a[place]; }
+        }
+      }
+      html += `<div class="gr-row ${rowClass}">
+        <span class="place">${place}</span>
+        <span class="pick">${escapeHtml(pick || '—')}</span>
+        <span class="icon">${iconChar}</span>`;
+      if (showActual) html += `<span class="actual-text">→ ${escapeHtml(showActual)}</span>`;
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+// Renders the tiebreaker section below the tree.
+function renderTiebreakersReadOnly(bracket, results) {
+  const gbPick = bracket.goldenBoot;
+  const gbActual = results?.goldenBoot;
+  let gbClass = '', gbActualText = '';
+  if (gbActual) {
+    if (gbPick && gbPick.toLowerCase().trim() === gbActual.toLowerCase().trim()) gbClass = 'correct';
+    else if (gbPick) { gbClass = 'wrong'; gbActualText = `Actual: ${gbActual}`; }
+  }
+
+  const fsPick = (bracket.finalScoreA != null && bracket.finalScoreB != null)
+    ? `${bracket.finalScoreA} – ${bracket.finalScoreB}` : '';
+  const fsActual = (results?.finalScoreA != null && results?.finalScoreB != null)
+    ? `${results.finalScoreA} – ${results.finalScoreB}` : null;
+  let fsClass = '', fsActualText = '';
+  if (fsActual) {
+    if (bracket.finalScoreA === results.finalScoreA && bracket.finalScoreB === results.finalScoreB) fsClass = 'correct';
+    else if (fsPick) {
+      const userMargin = bracket.finalScoreA - bracket.finalScoreB;
+      const actMargin = results.finalScoreA - results.finalScoreB;
+      if (userMargin === actMargin) {
+        fsClass = ''; // partial credit — neither fully right nor wrong
+        fsActualText = `Margin correct · Actual: ${fsActual}`;
+      } else {
+        fsClass = 'wrong';
+        fsActualText = `Actual: ${fsActual}`;
+      }
+    }
+  }
+
+  let html = '<h3 style="font-family:\'Fraunces\',serif;font-weight:800;font-size:18px;margin:24px 0 4px;">Tiebreakers</h3>';
+  html += '<div class="tiebreaker-strip">';
+  html += `<div class="tb-card ${gbClass}">
+    <div class="tb-lbl">Golden Boot (5 pts)</div>
+    <div class="tb-pick">${escapeHtml(gbPick || '—')}</div>
+    ${gbActualText ? `<div class="tb-actual">${escapeHtml(gbActualText)}</div>` : ''}
+  </div>`;
+  html += `<div class="tb-card ${fsClass}">
+    <div class="tb-lbl">Final Score (10 exact / 3 margin)</div>
+    <div class="tb-pick">${escapeHtml(fsPick || '—')}</div>
+    ${fsActualText ? `<div class="tb-actual">${escapeHtml(fsActualText)}</div>` : ''}
+  </div>`;
+  html += '</div>';
+  return html;
+}
+
+// Main entry point. Renders the full "View My Bracket" panel: meta header,
+// score breakdown, group-stage grid, tree bracket, tiebreakers.
+function renderUserBracketView(record, results) {
+  const b = record.bracket || {};
+  const r = results || {};
+  const alive = computeAliveTeams(r);
+  const breakdown = computeBracketScoringBreakdown(b, r, alive);
+
+  const submittedDate = record.submittedAt ? new Date(record.submittedAt).toLocaleString() : '—';
+  const paidLabel = record.paid
+    ? '<span class="status-paid">✓ PAID</span>'
+    : '<span class="status-unpaid">○ UNPAID</span>';
+
+  let html = '';
+  html += '<div class="bracket-view-meta">';
+  html += '<div style="font-family:\'JetBrains Mono\',monospace;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(10,26,20,0.6);margin-bottom:8px;">Submitted Bracket</div>';
+  html += `<h2>${escapeHtml(record.name || '—')}</h2>`;
+  html += `<div class="submeta">${escapeHtml(record.email || '—')} · ${paidLabel} · Submitted ${escapeHtml(submittedDate)}</div>`;
+  html += '</div>';
+
+  html += renderScoreBreakdown(breakdown);
+
+  html += renderGroupStageReadOnly(b, r);
+
+  // Tree bracket
+  const R32_ORDER = [
+    'R32-3','R32-6','R32-1','R32-4',  // → QF-1
+    'R32-12','R32-11','R32-10','R32-9', // → QF-2
+    'R32-2','R32-5','R32-7','R32-8',  // → QF-3
+    'R32-15','R32-14','R32-13','R32-16' // → QF-4
+  ];
+  const R16_ORDER = ['R16-1','R16-2','R16-5','R16-6','R16-3','R16-4','R16-7','R16-8'];
+  const QF_ORDER = ['QF-1','QF-2','QF-3','QF-4'];
+  const SF_ORDER = ['SF-1','SF-2'];
+
+  html += '<h3 style="font-family:\'Fraunces\',serif;font-weight:800;font-size:18px;margin:24px 0 4px;">Knockout Bracket</h3>';
+  html += '<p class="scroll-hint">← scroll horizontally to see the full bracket →</p>';
+  html += '<div class="bracket-tree-wrapper"><div class="bracket-tree">';
+  html += '<div class="bracket-col bracket-col-r32"><div class="bracket-col-label">Round of 32 · 2 pts</div>';
+  R32_ORDER.forEach(id => { html += renderTreeCell('r32', id, b, r, alive); });
+  html += '</div>';
+  html += '<div class="bracket-col bracket-col-r16"><div class="bracket-col-label">Round of 16 · 4 pts</div>';
+  R16_ORDER.forEach(id => { html += renderTreeCell('r16', id, b, r, alive); });
+  html += '</div>';
+  html += '<div class="bracket-col bracket-col-qf"><div class="bracket-col-label">Quarterfinals · 8 pts</div>';
+  QF_ORDER.forEach(id => { html += renderTreeCell('qf', id, b, r, alive); });
+  html += '</div>';
+  html += '<div class="bracket-col bracket-col-sf"><div class="bracket-col-label">Semifinals · 16 pts</div>';
+  SF_ORDER.forEach(id => { html += renderTreeCell('sf', id, b, r, alive); });
+  html += '</div>';
+  html += '<div class="bracket-col bracket-col-final"><div class="bracket-col-label">Final · 32 pts</div>';
+  html += renderTreeFinal(b, r, alive);
+  html += '</div>';
+  html += '</div></div>';
+
+  html += renderTiebreakersReadOnly(b, r);
+
+  return html;
+}
+
+/* ==========================================================
    PARTICIPANT SELF-LOOKUP
    ========================================================== */
 function resetMyBracketLookup() {
@@ -3202,10 +3964,14 @@ async function lookupMyBracket() {
       errBox.style.display = 'block';
       return;
     }
-    // Render
+    // Load the official results so we can show right/wrong indicators and a
+    // points breakdown. If results haven't been entered yet (early in the
+    // tournament), the bracket still renders — just with all picks pending.
+    await loadResults();
+    // Render the rich tree view
     resultBox.innerHTML = `
       <div class="card">
-        ${renderBracketReadOnly(record)}
+        ${renderUserBracketView(record, officialResults)}
         <div class="btn-row">
           <button class="btn secondary" onclick="resetMyBracketLookup()">Look up another</button>
           <button class="btn" onclick="showView('view-welcome')">Back to home</button>
